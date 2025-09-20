@@ -1,0 +1,346 @@
+Self-practice
+Week 06
+In class
+
+const greet = (name, formatter) => formatter(name)
+const shout = text => text.toUpperCase() + '!!!'
+const sad = text => text.toUpperCase() + 'T-T'
+console.log(greet('Alice', shout))
+console.log(greet('Alice', sad))
+
+คำอธิบาย ตัวอย่างนี้มีการประกาศ function แบบ function expreesions และเป็นตัวอย่างของการใช้ Higher-Order function ฟังก์ชันที่ รับฟังก์ชันอื่นเป็นพารามิเตอร์ 
+หรือส่งฟังก์ชันออกมาเป็นผลลัพธ์ ซึ่ง greet เป็น Higher-Order Function เพราะรับ function formatter เข้ามา จากตัวอย่างนี้ ฟังก์ชันที่ถูกส่งเข้าไปเป็น argument 
+ของอีกฟังก์ชันหนึ่งคือ function shout และ sad ซึ่งเป็น callback functions เมื่อ console.log(greet('Alice', shout)) จะมีการทำงานเป็นดังนี้ พารามิเตอร์ 
+name รับ 'Alice' เข้ามา และพารามิเตอร์ที่เป็น function formatter รับ function shout เข้ามาซึ่งสั่งให้เปลี่ยน Alice เป็นตัวพิมพ์ใหญ่ และเพิ่ม !!! เข้าไป 
+ผลลัพธ์จึงออกมาเป็น ALICE!!! ในกรณีเดียวกันกับการรับพารามิเตอร์ที่เป็น function sad ซึ่งมีการทำงานคือสั่งให้เปลี่ยน 'Alice' เป็นตัวพิมพ์ใหญ่ และเพิ่ม T-T เข้าไป 
+จึงได้ผลลัพธ์เป็น ALICET-T 
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+const fun1 = (numbers, formatter) => formatter(numbers)
+const even = (numbers) => numbers.filter((number) => number % 2 === 0)
+console.log(fun1([1, 2, 3, 4, 5, 6], even))
+
+คำอธิบาย จากตัวอย่างนี้ fun1 เป็น Higher-Order Function ซึ่งรับพารามิเตอร์ 2 ตัวคือ numbers(Arrays) และ formatter(function) ทำงานโดย 
+formatter(numbers) ต่อมา function even เป็น Callback Function ที่ใช้กับ fun1 ใช้ .filter() เลือกเฉพาะเลขคู่ (number % 2 === 0)
+ซึ่งเมื่อ console.log(fun1([1, 2, 3, 4, 5, 6], even)) จะส่งอาเรย์ [1, 2, 3, 4, 5, 6] และฟังก์ชัน even ไปให้ fun1 formatter(numbers) เมื่อเรียก 
+even([1, 2, 3, 4, 5, 6]) ใช้ .filter() เพื่อหาเลลขคู่ จึงได้ผลลัพธ์เป็น [2, 4, 6]
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+function a(){
+    return "a"
+}
+function b(){
+    return "b"
+}
+
+function x(){
+    function y() {}
+    const z = () => {
+        const m = () => {
+            function n() {}
+        }
+    }
+}
+
+คำอธิบาย ตัวอย่างนี้เป็นตัวอย่างของการทับซ้อนกันของ function หรือ closure function ซึ่ง a() และ b() เป็น ฟังก์ชันระดับบนสุด (top-level functions)
+เรียกใช้งานได้จากที่ไหนก็ได้ ถ้าเรียก a() จะคืนค่า "a" ถ้าเรียก b() ก็จะคืนค่า "b" ส่วน function x มี y เป็นฟังก์ชันปกติที่ ประกาศอยู่ข้างใน x จะถูกสร้างใหม่ทุกครั้งที่
+เรียก x() ใช้ได้เฉพาะภายใน x เท่านั้น ต่อมา z เป็น Arrow Function ที่ถูกกำหนดให้กับตัวแปร z ใช้ได้เฉพาะใน scope ของ x เหมือนกัน m เป็นฟังก์ชันที่อยู่ข้างใน z
+อีกที ซึ่งสามารถเข้าถึงตัวแปรใน z หรือ x ได้ (เพราะเป็น Closure Scope) สุดท้าย n เป็นฟังก์ชันที่ประกาศอยู่ใน m จึงอยู่ลึกที่สุด ใช้ได้เฉพาะภายใน m เท่านั้น
+จากตัวอย่างนี้ฟังก์ชันสามารถ ซ้อนกันได้ไม่จำกัดชั้น ฟังก์ชันด้านในสามารถเข้าถึงตัวแปรของฟังก์ชันด้านนอกได้ (closure) แต่ฟังก์ชันด้านนอก ไม่สามารถเข้าถึงของด้านในได้
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+let y = 100 //global variable
+let sum = 5
+sum = 2 // เลือกค่าล่าสุดในการรันโปรแกรม
+function getScore(x) {
+  //   let y = 10 //local variable
+  //global function
+  let mid = 40
+  let final = 30
+  function doSomething() {
+    // console.log(`dosomething: ${y + sum + x + mid + final}`)
+    return `dosomething: ${y + sum + x + mid + final}`
+  }
+  doSomething()
+  return mid + final + x + y + sum
+  //   return doSomething()
+}
+const score = getScore(1)
+console.log(score)
+// console.log(doSomething()) //cannot access
+// console.log(x, mid, final) //cannot access
+
+คำอธิบาย ตัวแปร Global let y = 100 และ let sum = 5 จากตัวอย่างมีการกำหนด sum ซ้ำ sum = 2 โปรแกรมจะเรียกใช้ค่าล่าสุดคือ sum = 2 ซึ่งในตัวอย่างนี้ y 
+และ sum เป็นค่าที่อยู่ใน Global Scope ฟังก์ชัน getScore(x) รับพารามิเตอร์ x มี local variables คือ mid = 40 final = 30 และมีฟังก์ชันซ้อน doSomething() 
+ซึ่งสามารถเข้าถึงได้ทุกตัวแปรที่อยู่ใน scope ของ getScore + global scope (y, sum) มีการทำงานดังนี้ const score = getScore(1) เมื่อ console.log(score)
+จะเป็น x = 1 คำนวณผลลัพธ์จาก return mid + final + x + y + sum แทนค่าได้ดังนี้ mid = 40, final = 30, x = 1, y = 100 และ sum = 2
+ผลรวม = 40 + 30 + 1 + 100 + 2 = 173 ดังนั้น console.log(score) ได้ผลลัพธ์คือ 173 ซึ่งมีตัวอย่างของสิ่งที่ไม่สามารถทำได้ console.log(doSomething()) 
+error เพราะ doSomething เป็น local function ใช้ได้เฉพาะใน getScore เท่านั้น และ console.log(x, mid, final) error เช่นกัน เพราะ x, mid, final 
+ไม่ได้อยู่ใน global scope
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+const z = 1;
+function makeAdder(x) {
+    console.log(x)
+    // console.log(y) //y is not defined
+    console.log(z)
+    return function doSomething(y){
+        return x + y + z
+    } 
+    // return doSomething //return function
+    // return doSomething() //return result of function
+}
+const result = makeAdder(10) //return ฟังก์ชัน doSomething ที่จดจำค่า x = 10 ไว้ (closure) ซึ่งตอนนี้เป็นฟังก์ชัน ไม่ใช่ค่าจำนวน
+console.log(typeof result) 
+console.log(result(3)) //เรียกฟังก์ชัน result (ซึ่งคือ doSomething) โดยส่ง y = 3 ได้ผลลัพธ์เท่ากับ 14
+
+const add5 = makeAdder(5)
+const add10 = makeAdder(10)
+console.log(add5(3)) // 3 + 5 + 1
+console.log(add10(4)) // 4 + 10 + 1
+
+คำอธิบาย ตัวอย่างนี้มี Global variable คือ z = 1 ซึ่งเป็นตัวแปรที่ทุกฟังก์ชันเข้าถึงได้ และ Function makeAdder(x) รับค่า x คืนค่าเป็น function ใหม่ 
+(doSomething) ฟังก์ชัน doSomething(y) มีสิทธิ์เข้าถึงตัวแปรภายในของตนเองคือ y ตัวแปร x จาก makeAdder และ ตัวแปร z จาก Global scope ทำให้เกิด 
+Closure ซึ่งเมื่อ makeAdder(10) ถูกเรียก function doSomething ถูกสร้างขึ้น และจดจำค่า x = 10 และ z = 1 ไว้ จากนั้นคืนฟังก์ชันออกมาเก็บในตัวแปร 
+result ดังนี้ x = 10 พิมพ์ 10 และ 1 (จาก console.log) คืนค่าฟังก์ชัน doSomething ซึ่งตอนนี้ผลลัพธ์เป็น function เมื่อ console.log(typeof result) จะได้
+"function" ต่อมา console.log(result(3)) เรียก doSomething(3) คำนวณ x + y + z = 10 + 3 + 1 ได้ผลลัพธ์เท่ากับ 14 ตัวอย่าง const add5 = makeAdder(5)
+สร้างฟังก์ชันใหม่ที่จำค่า x = 5 และ z = 1 และ const add10 = makeAdder(10) สร้างฟังก์ชันใหม่ที่จำค่า x = 10 และ z = 1 console.log(add5(3)) ใช้แทนค่า 
+x = 5, y = 3, z = 1 ผลลัพธ์จะได้เท่ากับ 5 + 3 + 1 = 9 ส่วน console.log(add10(4)) ใช้แทนค่า x = 10, y = 4, z = 1 ผลลัพธ์ที่ได้จะเท่ากับ 
+10 + 4 + 1 = 15
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+function counter() {
+    let count = 0
+    function increment() {
+        return ++count
+    }
+    function decrement() {
+        return --count;
+    }
+    function getCount() {
+        return count
+    }
+    return {
+        addCount: increment,
+        decreseCount: decrement, 
+        getCountValue: getCount 
+    }
+}
+
+const c = counter()
+
+console.log(c.addCount())
+console.log(c.addCount())
+console.log(c.addCount())
+console.log(c.decreseCount())
+console.log(c.getCountValue())
+
+คำอธิบาย จากตัวอย่างนี้ count เป็น Local Variable ถูกสร้างขึ้นทุกครั้งที่เรียก counter() ใช้ได้เฉพาะใน counter() เท่านั้น ซึ่ง function increment, decrement, 
+getCount คือ Closure function ถูก return ออกมาในรูปแบบ object แต่ละ function ยัง "จำ" ค่า count ได้แม้ว่า counter() จะจบการทำงานไปแล้ว
+const c = counter() สร้าง instance ใหม่ของ counter พร้อม count = 0 เมื่อ c.addCount() จะเพิ่มค่า count ขึ้นมา 1 (++count) ได้ผลลัพธ์เท่ากับ 1
+ต่อมา console.log(c.addCount()) ไปอีกค่าก็จะเพิ่มขึ้นไปเรื่อย ๆ เป็น 2 และ 3 ตามลำดับ แต่เมื่อรัน console.log(c.decreseCount()) จะลบค่า count ทีละ 1 
+(--count) ได้ผลลัพธ์เท่ากับ 2 สุดท้าย console.log(c.getCountValue()) เป็นการคืนค่า count = 2 สรุปว่าฟังก์ชัน counter ใช้ Closure เพื่อเก็บสถานะของตัวแปร 
+count ไว้ระหว่างการเรียกใช้งานหลาย ๆ ครั้งได้ 
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+function idGenerator(){
+    let count = 0
+    return function(){
+        ++count
+        return count
+    }
+}
+const idGen = idGenerator()
+console.log(idGen())
+console.log(idGen())
+console.log(idGen())
+
+คำอธิบาย function idGenerator สร้าง local variable count = 0 แล้ว return anonymous function ที่เข้าถึงและแก้ไข count ได้ แม้ว่า idGenerator() 
+จะทำงานเสร็จแล้ว แต่ฟังก์ชันที่ return ออกมายังจำค่า count ได้อยู่ (Closure) กำหนด const idGen = idGenerator() ให้ idGen คือฟังก์ชันที่อ้างอิง count ใน 
+scope ของ idGenerator ซึ่ง count เริ่มต้นที่ 0 เมื่อ idGen() ครั้งที่ 1 จะถูกดำเนิการโดย ++count ได้ผลลัพธ์คือ count = 1 และ return 1 ออกมา ต่อมา idGen() 
+ครั้งที่ 2 ถูกดำเนินการด้วย ++count อีกครั้ง ได้ผลลัพธ์เป็น count = 2 สุดท้าย idGen() ครั้งที่ 3 ถูกดำเนินการด้วย ++count เช่นเดิม จึงได้ผลลัพธ์เป็น count = 3
+function idGenerator() นี้ สามารถนำไปสร้าง ID แบบไม่ซ้ำ หรือ ลำดับหมายเลขอัตโนมัติได้
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+function outerFunction(a){
+    return function innerFunction(b){
+        return a + b
+    }
+}
+
+const addFive = outerFunction(5)
+console.log(addFive(3))
+
+const addTen = outerFunction(10)
+console.log(addTen(2)) 
+
+คำอธิบาย function outerFunction(a) รับค่า a และคืนค่าฟังก์ชัน innerFunction(b) แต่ฟังก์ชันนี้สามารถเข้าถึงค่าของ a ได้แม้ว่า outerFunction จะจบการทำงานแล้ว 
+นี่คือคุณสมบัติของ Closure กำหนด const addFive = outerFunction(5) ตอนนี้ addFive คือฟังก์ชัน innerFunction(b) โดยที่บันทึก a = 5 ไว้ ต่อมาเมื่อ 
+console.log(addFive(3)) จะไปเรียก innerFunction(3) คำนวณได้ดังนี้ a + b = 5 + 3 ซึ่งมีผลลัพธ์เท่ากับ 8 กรณีเดียวกันกับ const addTen = outerFunction(10)
+ตอนนี้ addTen คือฟังก์ชัน innerFunction(b) โดยที่ a = 10 เมื่อ console.log(addTen(2)) เรียก innerFunction(2) คำนวณได้ a + b = 10 + 2 ซึ่งมีผลลัพธ์เท่ากับ 12
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+Self-practice
+
+/*
+1.Write a function makeTransformer(transform) that takes a transformation function and returns a new function to apply it to a string.
+const upperCase = makeTransformer(str => str.toUpperCase())
+console.log(upperCase("hello")) // "HELLO"
+const reverse = makeTransformer(str => str.split("").reverse().join(""))
+console.log(reverse("hello")) // "olleh"
+*/
+
+const makeTransformer = (formatter) => (word) => formatter(word)
+const upperCase = makeTransformer(str => str.toUpperCase())
+const reverse = makeTransformer(str => str.split("").reverse().join(""))
+
+console.log(upperCase("hello"))
+console.log(reverse("hello")) 
+
+คำอธิบาย โจทย์นี้เป็น Higher-Order Function ซึ่งรับฟังก์ชัน formatter เป็น argument แล้วคืนค่าฟังก์ชันใหม่ (word) => formatter(word) ฟังก์ชันที่คืนค่าออกมา 
+จำค่า formatter ไว้ กำหนด const upperCase = makeTransformer(str => str.toUpperCase()) ซึ่งเป็นฟังก์ชันที่รับ string แล้วคืนค่าตัวอักษรใหญ่
+และ const reverse = makeTransformer(str => str.split("").reverse().join("")) ซึ่งเป็นฟังก์ชันที่รับ string แล้วคืนค่ากลับหลัง เมื่อ 
+console.log(upperCase("hello")) จะทำการ return upperCase(word) ได้ผลลัพธ์เป็น "HELLO" ต่อมา console.log(reverse("hello")) จะทำการ return
+reverse(word) จะได้ผลลัพธ์เป็น "olleh" 
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+2.Write a function limitCalls(fn, n) that returns a new function which can only call fn up to n times.
+const sayHi = () => "Hi"
+const limited = limitCalls(sayHi, 2)
+console.log(limited()) // "Hi"
+console.log(limited()) // "Hi"
+console.log(limited()) // null or "Limit reached"
+*/
+
+function limitCalls(fn, n){
+    let count = 0 
+    return function(...args) {
+        if (count < n) {
+            count++      
+            return fn(...args) 
+        } else {
+            return null
+        }
+    }
+}
+
+const sayHi = () => "Hi"
+const limited = limitCalls(sayHi, 2)
+
+console.log(limited())
+console.log(limited())
+console.log(limited())
+
+คำอธิบาย จากโจทย์ต้องการให้เขียนฟังก์ชัน limitCalls(fn, n) ที่คืนค่าเป็นฟังก์ชันใหม่ ซึ่งสามารถเรียก fn ได้ สูงสุด n ครั้ง ก่อนอื่นเริ่มสร้าง function limitCalls ซึ่ง
+รับฟังก์ชัน fn และพารามิเตอร์ n คือจำนวนครั้งสูงที่สุดที่ fn จะถูกเรียกได้ มีการกำหนด let count = 0 ซึ่งเป็น local variable ใน limitCalls ไม่สามารถเข้าถึงจากภาย
+นอกได้ ไว้สำหรับเก็บจำนวนครั้งที่ฟังก์ชันถูกเรียก เขียนให้ 
+return function(...args) {
+    if (count < n) {
+        count++
+        return fn(...args)
+    } else {
+        return null
+    }
+}
+
+ฟังก์ชันนี้สามารถ เข้าถึงตัวแปร count ได้แม้ว่าฟังก์ชัน limitCalls จะจบไปแล้วเป็นคุณสมบัติของ Closure ใช้ rest parameter ...args เพื่อส่ง argument ให้กับ fn 
+ทุกครั้ง ถ้าเรียกไม่เกิน n ครั้ง ให้คืนค่าจาก fn แต่ถ้าเรียกเกิน n ครั้ง ให้คืนค่าเป็น null ฟังก์ชัน limited จะจำค่า count ไว้ตลอดเวลาที่ถูกเรียก ไม่กระทบฟังก์ชัน 
+sayHi ดั้งเดิม เมื่อ fn ถูกเรียก 1 ครั้ง ค่า count จะเพิ่มขึ้นเรื่อย ๆ จนถึงค่า n เมื่อเกินค่า n แล้วก็จะถูก return ออกมาเป็น null
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+3.Write a function createAccumulator() that returns a function which adds numbers passed to it and keeps a running total.
+const acc = createAccumulator()
+console.log(acc(5)) // 5
+console.log(acc(3)) // 8
+console.log(acc(10)) // 18
+*/
+
+function createAccumulator(){
+    let sum = 0
+    return function(num){
+        sum += num
+        return sum 
+    } 
+}
+const acc = createAccumulator()
+
+console.log(acc(5))
+console.log(acc(3))
+console.log(acc(10))
+
+คำอธิบาย โจทย์ข้อนี้ต้องการให้สร้าง function ที่สามารถหาผลบวกของเลขที่ต้องการได้ โดยเริ่มต้นที่การสร้าง function createAccumulator และกำหนดให้ sum = 0 
+ซึ่ง sum เป็นตัวแปร private เก็บผลรวมของตัวเลขทั้งหมด ฟังก์ชันสามารถเข้าถึงและแก้ไขค่า sum ได้ แม้ createAccumulator จะจบแล้ว ประกาศ const acc = createAccumulator()
+หมายความว่า acc คือ ฟังก์ชันใหม่ ที่จำค่า sum ไว้ ตอนนี้ sum = 0 (เริ่มต้น) เมื่อเรียกใช้งาน console.log(acc(5)) ค่า sum จะถูกบวกเพิ่มโดย 5 ได้ผลลัพธ์เป็น 5 และจดจำค่า 5 ไว้
+จากนั้นเรียกใช้งาน console.log(acc(3)) จะถูกบวกเพิ่มโดย 3 เป็น 5 + 3 ได้ผลลัพธ์เท่ากับ 8 และจดจำค่า 8 ไว้ สุดท้ายเรียกใช้งาน console.log(acc(10)) จะถูกบวกเพิ่มโดย 10 
+เป็น 8 + 10 ได้ผลลัพธ์เท่ากับ 18 หมายความว่าทุกครั้งที่เรียก acc(num) → sum จะเพิ่มขึ้นตาม num
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+4.Write a function createFilter(condition) that returns a function to filter an array based on the provided condition.
+const filterEven = createFilter(n => n % 2 === 0)
+console.log(filterEven([1,2,3,4,5])) // [2,4]
+const filterBig = createFilter(n => n > 10)
+console.log(filterBig([5,12,7,20])) // [12,20]
+*/
+
+function createFilter(condition) {
+    return function(arr) {
+        return arr.filter(condition)
+    }
+}
+
+const filterEven = createFilter(n => n % 2 === 0)
+console.log(filterEven([1,2,3,4,5]))
+const filterBig = createFilter(n => n > 10)
+console.log(filterBig([5,12,7,20]))
+
+คำอธิบาย โจทย์นี้ต้องการให้เราสร้างฟังก์ชันที่สามารถรับค่าเงื่อนไข(condition) จากฟังก์ชันอื่น ๆ เพื่อใช้กรองข้อมูลใน array ได้ เริ่มจากการสร้างฟังก์ชัน createFilter 
+ซึ่งรับ parameter เป็น condition ฟังก์ชัน จากนั้นให้ฟังก์ชันนี้ return ฟังก์ชันใหม่ที่รับค่า arr เข้ามา และใช้ .filter() กับ condition ที่ส่งเข้ามาในการดำเนินการ
+เมื่อเรียก createFilter(n => n % 2 === 0) จะคืนค่าเป็นฟังก์ชันใหม่ที่กรองเลขคู่ การเรียก filterEven([1,2,3,4,5]) จะส่ง array [1,2,3,4,5] เข้าไป และใช้ 
+.filter() กับเงื่อนไขเลขคู่ ผลลัพธ์สุดท้ายจะได้ [2,4] ต่อมา เรียกใช้ const filterBig = createFilter(n => n > 10) จะคืนค่าเป็นฟังก์ชันใหม่ที่กรองเลขที่มีค่า
+มากกว่า 10 การเรียก console.log(filterBig([5,12,7,20])) จะส่ง array [5,12,7,20] เข้าไป และใช้ .filter() กับเงื่อนไขกรองตัวเลขที่มีค่ามากกว่า 10 ซึ่ง
+ผลลัพธ์จะได้เป็น [12,20]
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+5.Write a function delayLog(message, delay) that returns a function which, when called, will log the message after a delay in milliseconds.
+const logHello = delayLog("Hello after 1s", 1000)
+logHello() // After 1 second, prints "Hello after 1s"
+ */
+
+function delayLog(message, delay){
+    return function() {
+        setTimeout(() => {
+            console.log(message)
+        }, delay)
+    }
+}
+
+const logHello = delayLog("Hello after 1s", 1000)
+logHello() 
+const logBye = delayLog("Goodbye after 2s", 2000)
+logBye() 
+
+คำอธิบาย โจทย์นี้ต้องการให้เขียนฟังก์ชันที่สามารถส่งข้อความและเวลาที่ delay มาให้ฟังก์ชันอื่นทำงานได้ โดยเริ่มจากสร้างฟังก์ชัน delayLog ซึ่งรับพารามิเตอร์เป็น message 
+และ delay เข้ามา จากนั้นให้ return ค่าเป็นฟังก์ชันใหม่ เมื่อเรียกใช้งานฟังก์ชันนี้ ฟังก์ชันจะใช้ setTimeout เพื่อรอเวลาที่กำหนดก่อนพิมพ์ข้อความออกมา กำหนดให้
+const logHello = delayLog("Hello after 1s", 1000) logHello() เมื่อเรียก delayLog("Hello after 1s", 1000) จะคืนค่าเป็นฟังก์ชันใหม่ที่จำค่า 
+message และ delay ไว้ การเรียก logHello() จึงจะส่งค่า message และ delay เข้าไปใน setTimeout และพิมพ์ข้อความหลังเวลาที่กำหนด ได้ผลลัพธ์คือ "Hello after 1s" 
+ขึ้นมาหลัง 1 วินาที ในกรณีเดียวกันกับการกำหนด const logBye = delayLog("Goodbye after 2s", 2000) เมื่อเรียก delayLog("Goodbye after 2s", 2000) จะคืนค่า
+เป็นฟังก์ชันใหม่ที่จำค่า message และ delay ไว้เช่นกัน การเรียก logBye() จึงจะส่งค่า message และ delay เข้าไปใน setTimeout และพิมพ์ข้อความหลังเวลาที่กำหนด ได้ผลลัพธ์คือ
+"Goodbye after 2s" ขึ้นมาหลัง 2 วินาที 
+
+-------------------------------------------------------------------------------------------------------------------------------------
