@@ -1,0 +1,384 @@
+Self-practice
+Week 07
+In class
+
+สัปดาห์นี้เป็นการเรียนรู้เรื่องของ JS DOM ซึ่งก่อนอื่นเราสร้างไฟล์ index 2.html ขึ้นมาเพื่อกำหนดโครงสร้างของหน้าเว็บ และเขียน <script src="./main.js"></script> 
+เพื่อเชื่อมการทำงานจาก main.js และสามารถจัดการหน้าเว็บผ่านไฟล์ main.js ได้ (การจัดการ DOM)
+
+const html1 = document.documentElement
+const firstNode = document.firstChild
+const firstElementChildNode = document.firstElementChild //กรองเฉาะ element Type
+const lastNode = document.lastChildChild
+const lastElementChildNode = document.lastElementChild //กรองเฉาะ element Type
+
+คำอธิบาย จาก code เริ่มต้นที่กำหนดให้ html1 = document.documentElement ซึ่งจะทำการคืนค่า <html lang="en"> ... </html> ทั้งแท็ก <html> หรือคืนค่า 
+root element ต่อมากำหนดให้ firstNode = document.firstChild ซึ่งจะทำการคืนค่า <!DOCTYPE html> เป็น DocumentType node ซึ่งเป็น node แรกที่ปรากฎ
+ส่วน document.firstElementChild จะคืนค่า <html> ซึ่งเป็น element node แรกสุดของ document แตกต่างจาก document.firstChild ที่กรองเฉพาะ node ที่เป็น 
+element ต่อมากำหนดให้ lastNode = document.lastChild ซึ่งจะทำการคืนค่า <html> เพราะใน DOM node จริง ๆ มี <html> เป็น node สุดท้ายเสมอ ซึ่ง 
+document.lastElementChild ก็คืนค่าเป็น <html> เช่นกัน เพราะคือ element สุดท้ายของไฟล์ โดยทั้งหมดนี้เชื่อมกับ root ของ index.html
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+console.log(document.body)
+console.log(document.body.nodeName)
+console.log(document.body.nodeType)
+console.log(document.body.nodeValue)
+
+คำอธิบาย เราสามารถดูข้อมูลของ node ได้โดยการใช้ nodeName nodeType และ nodeValue ซึ่งจากตัวอย่างนี้ได้ console.log(document.body) ออกมา จะได้ค่าเป็น
+<body> ... </body> ทั้งหมด ต่อมาลอง console.log(document.body.nodeName) จะได้ชื่อ node ออกมา ซึ่งคือ "BODY" และ console.log(document.body.nodeType)
+เพื่อเช็คประเภทของ node ซึ่ง <bode></body> คือ ELEMENT_NODE สุดท้าย console.log(document.body.nodeValue) ดูค่าด้านในของ node body ซึ่งเป็น null 
+เพราะไม่ใช่ text node
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+if (document.body.nodeType === Node.ELEMENT_NODE)
+  console.log(`body is an element node type`)
+if (document.body.nodeType === Node.ATTRIBUTE_NODE)
+  console.log(`body is an attribute node type`)
+if (document.body.nodeType === Node.TEXT_NODE)
+  console.log(`body is a text node type`)
+
+คำอธิบาย ตัวอย่าง code นี้เป็นการเขียนเช็ค type ของ node body โดยถ้า node body เป็น ELEMENT_NODE ให้คืนค่า `body is an element node type` แต่ถ้าเป็น 
+ATTRIBUTE_NODE ให้คืนค่า `body is an attribute node type` และสุดท้ายถ้าเป็น Node.TEXT_NODE ให้คืนค่า `body is a text node type` ซึ่งเมื่อรันโปรแกรมแล้ว
+จะได้ค่าเป็น `body is an element node type` 
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+//query div element with id "exampleElement"
+const divElement = document.getElementById("exampleElement")
+// div  childNodes
+const divChildNodes = divElement.childNodes //return NodeList data type
+console.log(`length: ${divElement.childNodes.length}`)
+divChildNodes.forEach((child) => {
+  console.log(child.nodeName)
+  console.log(child.nodeType)
+  console.log(child.nodeValue)
+})
+
+คำอธิบาย เริ่มต้นที่ const divElement = document.getElementById("exampleElement") เป็นคำสั่งในการเข้าถึง element ที่มี id เป็น exampleElement 
+ต่อมาเป็นตัวอย่างของ childNodes ซึ่งคืนค่า NodeList data type ( Text node, Comment node, Element node ) ตัวอย่างเช่น
+Comment node: <!-- this is a comment node -->
+Text node: " This is some "
+<span style="display:none">hidden</span>
+Text node: " text content."
+ต่อมามีการเช็คจำนวน child ทั้งหมด เมื่อ console.log(`length: ${divElement.childNodes.length}`) ออกมาจะได้ค่าเป็น length = 4 จาก code นี้มีการ
+วนลูปดูแต่ละ child node แล้ว log property นั้น ในที่นี้ 1 = ELEMENT_NODE, 3 = TEXT_NODE และ 8 = COMMENT_NODE ใน div ตัวอย่าง จะได้ผลเป็น 
+#comment คืนค่า nodeType 8 มี nodeValue คือ " this is a comment node " ต่อมา #text คืนค่า nodeType 3 มี nodeValue คือ " This is some "
+SPAN คืนค่า nodeType 1 มี nodeValue เป็น null สุดท้าย #text คืนค่า nodeType 3 มี nodeValue เป็น " text content."
+
+//div children
+const divChildren = divElement.children //return HTMLCollection data type
+console.log(`length: ${divElement.children.length}`)
+Array.from(divChildren).forEach((child) => {
+  console.log(child.nodeName)
+  console.log(child.nodeType)
+  console.log(child.nodeValue)
+})
+
+คำอธิบาย ตัวอย่างนี้เปรียบเทียบความแตกต่างระหว่าง divElement.childNodes และ divElement.children ซึ่ง divElement.children จะคืนค่า HTMLCollection data 
+type หรือ คืนค่าเฉพาะ element node เท่านั้น ข้าม comment และ text node ไปเลย ซึ่งเมื่อ console.log(`length: ${divElement.children.length}`) เพื่อเช็คจำนวน
+children จะได้ค่าเท่ากับ 1 (เพราะมีแค่ <span>) ต่อมามีการแปลง แปลง HTMLCollection เป็น Array เพื่อวนลูปดูแต่ละ element จะได้ผลเป็น #SPAN คืนค่า nodeType = 1
+และมี nodeValue เป็น null 
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+//1. create <p> element
+const subject = document.getElementById('subject')
+const newParagraph = document.createElement('p')
+
+คำอธิบาย ตัวอย่างการสร้าง element p หรือ <p></p> ใหม่ โดยเริ่มต้นจากการเข้าถึง div element ที่มี id เป็น subject โดยใช้คำสั่ง document.getElementById('subject')
+ต่อมาทำการสร้าง p element โดยใช้คำสั่ง document.createElement('p') ในที่นี้กำหนดให้ p element นี้คือ newParagraph
+
+//1.5 create attribute id 
+const idAttr = document.createAttribute("id")
+idAttr.value = "int141"
+newParagraph.setAttributeNode(idAttr)
+// newParagraph.setAttribute("id", "int141")
+newParagraph.setAttribute("style", "color: red")
+newParagraph.setAttribute("name", "core")
+
+คำอธิบาย เมื่อสร้าง p element เรียบร้อยแล้ว ต่อมาเป็นตัวอย่างการสร้าง attribute โดยใช้คำสั่ง document.createAttribute("id") ซึ่งได้ attribute ที่ชื่อ "id"
+มาเรียบร้อย จากนั้นใส่ค่าของ attribute เข้าไปโดยใช้คำสั่ง idAttr.value = "int141" ทำการใส่ attribute ให้ p element ที่พึ่งสร้างขึ้นโดยใช้คำสั่ง
+newParagraph.setAttributeNode(idAttr) สุดท้ายจะได้เป็น  <p "id" = int141></p> แต่คำสั่งในการสร้าง attribute มีอีกวิธีที่จะทำให้ code กระชับกว่า คือการใช้
+.setAttribute เช่น newParagraph.setAttribute("id", "int141") newParagraph.setAttribute("style", "color: red")
+newParagraph.setAttribute("name", "core") สุดท้ายจะได้เป็น <p "id" = int141 "style" = color: red "name" = core></p>
+
+//2. create text node then 3. append to <p> child
+const pText = document.createTextNode('INT141')
+newParagraph.appendChild(pText)
+// newParagraph.textContent = "INT141"
+
+คำอธิบาย ต่อมาเป็นตัวอย่างของการใส่ text node หรือใส่ text ลงไปใน p element โดยใช้คำสั่ง document.createTextNode('INT141') คือการสร้าง text node 'INT141'
+และ newParagraph.appendChild(pText) คือการ Add text node ลงใน <p></p> 
+
+//4.append <p> with text node to div element
+subject.appendChild(newParagraph)
+
+คำอธิบาย สุดท้ายเป็นตัวอย่างของการเพิ่ม <p> เข้าไปใน <div id="subject"> โดยใช้คำสั่ง subject.appendChild(newParagraph)
+
+//get attribute value of "id"
+console.log(newParagraph.getAttribute("id")) //int141
+console.log(newParagraph.attributes[0]) // id = "int141"
+console.log(newParagraph.attributes[0].ownerElement) //<p id="int141">INT141</p>
+
+คำอธิบาย ตัวอย่างการอ่าน attribute g เมื่อ console.log(newParagraph.getAttribute("id")) จะคืนค่า int141 และลอง console.log(newParagraph.attributes[0])
+จะคืนค่าเป็น id = "int141" สุดท้าย console.log(newParagraph.attributes[0].ownerElement) จะได้ค่าเป็น <p id="int141">INT141</p>
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+const pAttributes = newParagraph.attributes //get all attribute 
+for (let i = 0; i < pAttributes.length; i++){
+    const name = pAttributes[i].name //get attribute name
+    const value = pAttributes[i].value // get attribute value
+    if ( pAttributes[i].name === "id") console.log(name, value)
+}
+
+let el = document.getElementById("demo")
+console.log(el.innerHTML)
+console.log(el.innerText)
+console.log(el.textContent)
+
+คำอธิบาย ตัวอย่างของ innerHTML innerText และ textContent ซึ่งก่อนอื่นกำหนด pAttributes = newParagraph.attributes ได้ NamedNodeMap คล้าย array 
+เก็บ attribute ทั้งหมดของ <p> ที่สร้างขึ้นมาก่อนหน้านี้ ดังนั้น pAttributes จะมี 3 attribute คือ id="int141" style="color:red" name="core"
+วนลูปผ่านทีละ attribute จากนั้นดึง .name และ .value ออกมา มีเงื่อนไข if (name === "id") จึง log แค่ของ id เท่านั้น กำหนดการเข้าถึง div element ที่มี id 
+เป็น demo จากนั้น console.log(el.innerHTML) จะคืนค่าเป็น string ของโค้ด HTML ด้านใน ผลลัพธ์เช่น :
+<b>Hello</b>
+<span style="display: none">hidden</span>
+World
+ต่อมาลอง console.log(el.innerText) จะคืนค่าแค่ข้อความที่ผู้ใช้สามารถมองเห็นบนหน้าเว็บจริง <span style="display:none">hidden</span> จะถูกข้ามไป ไม่แสดงผล
+ผลลัพธ์จึงเป็น :
+Hello
+World
+สุดท้าย console.log(el.textContent) จะคืนค่าข้อความดิบทั้งหมด ได้ผลลัพธ์เป็น :
+Hello
+hidden
+World
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+//1. find all drinks under <ul>
+const drink = document.getElementById("drink")
+const all = drink.getElementsByTagName('li')
+const allArray = Array.from(all);
+allArray.forEach(li => console.log(li.textContent));
+
+คำอธิบาย จากโจทย์ต้องการให้หา <ul> ที่มี id="drink" ทั้งหมด ก่อนอื่นเริ่มจากกำหนดการเข้าถึง element ที่มี id เป็น drink โดยใช้คำสั่ง document.getElementById("drink")
+ต่อมา กำหนดให้ const all = drink.getElementsByTagName('li') คือการเข้าถึง element ที่มี Tagname เป็น li ซึ่งจะทำการคืนค่าเป็น HTMLCollection ที่เก็บ 4 <li>:
+<li>cofee</li>
+<li>Tea</li>
+<li>Chocolate</li>
+<li>Juice</li>
+แปลงเป็น array จริง เพื่อใช้ .forEach เพื่อแสดงค่าที่ละตัวโดยใช้คำสั้ง const allArray = Array.from(all); และ allArray.forEach(li => console.log(li.textContent));
+ตามลำดับ
+
+//2. get <li>Tea</li>
+let teaDrink = allArray[1]
+console.log(teaDrink.textContent)
+
+คำอธิบาย โจทย์ต้องการให้แสดงค่า <li>Tea</li> จึงกำหนดให้ let teaDrink = allArray[1] ซึ่ง index [1] คือ element ที่สอง <li>Tea</li> และสุดท้ายค่อยเรียก
+แสดง teaDrink.textContent จะได้ค่า Tea
+
+//2.1 previous element sibling
+console.log(teaDrink.previousElementSibling)
+console.log(teaDrink.nextElementSibling)
+console.log(teaDrink.parentElement)
+
+คำอธิบาย ต้องการให้แสดง previous element sibling ได้ โดยการ console.log(teaDrink.previousElementSibling) จะคืนค่า element ก่อนหน้า Tea ซึ่ง
+มีผลลัพธ์เป็น <li>cofee</li> ต่อมา console.log(teaDrink.nextElementSibling) จะคืนค่า element ถัดจาก Tea ซึ่งมีผลลัพธ์เป็น <li>Chocolate</li> 
+และสุดท้าย console.log(teaDrink.parentElement) คือค่าของ <ul id="drink"> ... </ul> ซึ่งเป็น parentElement ที่ห่อ <li> ทั้งหมด ดังนั้นผลลัพธ์จึงเป็น 
+<ul id="drink">…</ul>
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Self-practice ( ไฟล์ main 1.js และไฟล์ index.html )
+
+สร้างไฟล์ index.html ขึ้นมาเพื่อกำหนดโครงสร้างของหน้าเว็บ และเขียน <script src="./main.js"></script> เพื่อเชื่อมการทำงานจาก main 1.js และสามารถจัดการ
+หน้าเว็บผ่านไฟล์ main 1.js ได้ (การจัดการ DOM)
+
+/* Question 1
+Given the following HTML:
+<div id="profile">
+  <h2>John Doe</h2>
+  <p style="display:none">Secret Info</p>
+  <p>Web Developer</p>
+</div>
+Write code to:
+- Display the value of .innerHTML of <div id="profile">
+- Display the value of .innerText
+- Display the value of .textContent */
+
+const profile = document.getElementById("profile")
+
+console.log("innerHTML:")
+console.log(profile.innerHTML)
+
+console.log("innerText:")
+console.log(profile.innerText)
+
+console.log("textContent")
+console.log(profile.textContent)
+
+คำอธิบาย จากโจทย์ต้องการให้เขียนไฟล์ html และแสดงเปรียบเทียบความแตกต่างระหว่าง innerHTML innerText และ textContent ใน div element ที่มี id เป็น profile
+เริ่มต้นที่การกำหนดการเข้าถึง element ที่มี id เป็น profile และ console.log(profile.innerHTML) ออกมา จะได้ผลลัพธ์เป็น :
+        <h2>John Doe</h2>
+        <p style="display:none">Secret Info</p>
+        <p>Web Developer</p>
+และ console.log(profile.innerText) แสดงเฉพาะสิ่งที่ผู้ใช้สามารถเห็นได้ ได้ผลลัพธ์เป็น : 
+        John Doe
+        Web Developer 
+สุดท้าย console.log(profile.textContent) ออกมา ได้ผลลัพธ์เป็น :
+        John Doe
+        Secret Info
+        Web Developer 
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+/* Question 2
+From the <ol id="animals">:
+<ol id="animals">
+  <li>Dog</li>
+  <li>Cat</li>
+  <li>Bird</li>
+  <li>Fish</li>
+</ol>
+- Write code to display all the animal names.
+- Find the previousElementSibling and nextElementSibling of <li>Bird</li>.
+- Display the parent of <li>Bird</li>. */ 
+
+const animals = document.getElementById("animals")
+const listItems = animals.getElementsByTagName("li")
+
+const listArray = Array.from(listItems)
+
+console.log("All animals:")
+listArray.forEach(li => console.log(li.textContent))
+
+const bird = listArray[2]
+console.log("Bird:", bird.textContent)
+
+console.log("Previous sibling:", bird.previousElementSibling.textContent)
+console.log("Next sibling:", bird.nextElementSibling.textContent)
+console.log("Parent element:", bird.parentElement)
+
+คำอธิบาย โจทย์ต้องการให้แสดงชื่อสัตว์ทั้งหมด และหา previousElementSibling และ nextElementSibling ของ <li>Bird</li> สุดท้ายให้แสดง parent element 
+ของ <li>Bird</li> เริ่มต้นที่การกำหนดการเข้าถึง element ที่มี id เป็น animals โดยใช้คำสั่ง const animals = document.getElementById("animals") จากนั้น
+กำหนดการเข้าถึง Tagname <li> ทั้งหมด ซึ่งคืนค่า HTMLCollection ของ <li> ทั้งหมด (Dog, Cat, Bird, Fish) และทำการสร้างเป็น array เพื่อใช้ forEach และ
+สามารถวนลูปได้ ต่อมาเขียน Function ใน forEach ให้ console.log(li.textContent) เป็นการแสดงค่า li ทุกตัวทีละตัว ซึ่งได้ผลลัพธ์เป็น :
+    Dog
+    Cat
+    Bird
+    Fish
+ต่อมาเข้าถึง <li>Bird</li> เขียนได้โดยใช้คำสั่ง const bird = listArray[2] เมื่อ console.log(bird.textContent) จะได้ผลลัพธ์เป็น Bird หา 
+previousElementSibling ของ Bird ต่อ โดยใช้คำสั่ง console.log(bird.previousElementSibling.textContent) ซึ่งจะแสดง element ก่อนหน้า Bird 
+จะได้ผลลัพธ์เป็น Cat และหา nextElementSibling ของ Bird ด้วยคำสั่ง console.log(bird.nextElementSibling.textContent) ซึ่งจะแสดง element ถัดจาก 
+Bird จะได้ผลลัพธ์เป็น Fish สุดท้ายเป็นการแสดง parent element ของ bird ซึงใช้คำสั่ง console.log(bird.parentElement) ได้ผลลัพธ์เป็น <ol id="animals">...</ol>
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+/* Question 3
+Add a new <p> element inside <section id="course"> with the following attributes:
+id = "js101"
+style = "font-weight:bold; color:green"
+name = "programming"
+content = "JavaScript 101" */
+
+const course = document.getElementById("course")
+const newP = document.createElement("p")
+
+newP.setAttribute("id", "js101")
+newP.setAttribute("style", "font-weight:bold; color:green")
+newP.setAttribute("name", "programming")
+
+const text = document.createTextNode("JavaScript 101")
+newP.appendChild(text)
+
+course.appendChild(newP)
+
+คำอธิบาย โจทย์ต้องการให้สร้าง p element ใหม่ ให้มี attribute ดังนี้ id = "js101" style = "font-weight:bold; color:green" และ name = "programming"
+และให้มีข้อความข้างใน p element คือ JavaScript 101 โดยเริ่มต้นจากกำหนดการเข้าถึง element ที่มี id เป็น course และทำการสร้าง p element โดยใช้คำสั่ง 
+const newP = document.createElement("p") ต่อมาสร้าง attribute ให้ p element ที่พึ่งสร้างมา โดยใช้คำสั่ง .setAttribute เช่น 
+newP.setAttribute("id", "js101") newP.setAttribute("style", "font-weight:bold; color:green") และ newP.setAttribute("name", "programming")
+ต่อมาใส่ content ให้ p element โดยการสร้าง text node ใช้คำสั่ง const text = document.createTextNode("JavaScript 101") และ Add เข้า p element 
+ด้วย newP.appendChild(text) สุดท้ายเป็นการ Add p element เข้า div element ที่มี id เป็น course จะได้ ผลลัพธ์บนหน้าเว็บเป็น JavaScript 101 ที่มีสีเขียว
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+/* Question 4
+Create a <div> element and assign the text:
+<u>Final Exam</u>
+Test setting the text using:
+.innerHTML
+.innerText
+.textContent
+Then compare the results displayed on the webpage. */
+
+const div = document.createElement("div")
+
+div.innerHTML = "<u>Final Exam</u>"
+document.body.appendChild(div)
+
+
+const div2 = document.createElement("div")
+
+div2.innerText = "<u>Final Exam</u>"
+document.body.appendChild(div2)
+
+const div3 = document.createElement("div")
+
+div3.textContent = "<u>Final Exam</u>"
+document.body.appendChild(div3)
+
+คำอธิบาย โจทย์ต้องการให้สร้าง div element และ ใส่ข้อความ <u>Final Exam</u> เพื่อเปรียบเทียบระหว่าง .innerHTML .innerText และ .textContent
+โดยเริ่มต้นจากการสร้าง div element แรก จากคำสั่ง const div = document.createElement("div") จากนั้นกำหนด div ให้แสดงเป็น innerHTML และ Add 
+เข้า body จะได้ผลลัพธ์บนหน้าเว็บเป็น Final Exam ต่อมาสร้าง div2 แต่กำหนด div ให้แสดงเป็น innerText แทน และ Add เข้า body เหมือนเดิม ได้ผลลัพธ์เป็น
+<u>Final Exam</u> สุดท้ายสร้าง div3 กำหนด div ให้แสดงเป็น textContent และ Add เข้า body ได้ผลลัพธ์เป็น <u>Final Exam</u> เช่นกัน
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+/* Question 5
+Given the following DOM structure:
+<section id="news">
+  <article>Article A</article>
+  <article>Article B</article>
+  <article>Article C</article>
+</section>
+- Find the number of child nodes of <section id="news">.
+- Display the nodeName of each child.
+- Display only the text (textContent) of each <article>. */
+
+const newsSection = document.getElementById("news")
+console.log("Number of child nodes:", newsSection.childNodes.length)
+
+newsSection.childNodes.forEach(node => {
+  console.log("Node name:", node.nodeName);
+})
+
+const articles = newsSection.getElementsByTagName("article")
+Array.from(articles).forEach(article => {
+  console.log("Article text:", article.textContent)
+})
+
+คำอธิบาย โจทย์ต้องการให้หาจำนวน child nodes ของ <section id="news"> และแสดง nodeName ของทุก child node สุดท้ายแสดงเฉพาะข้อความ (textContent) 
+ของ <article> ทุกตัว โดยเริ่มต้นจากการเข้าถึง element ที่มี id เป็น news ต่อมาต้องการหาจำนวน child nodes ใช้คำสั่ง console.log(newsSection.childNodes.length)
+ซึ่ง .childNodes จะคืนค่า NodeList ของทุก node ได้จำนวน child node เท่ากับ 7 และต้องการแสดง nodeName ของทุก child จึงใช้ forEach ในการาวนลูป และแสดง nodeName
+newsSection.childNodes.forEach(node => {
+  console.log("Node name:", node.nodeName);
+}); ซึ่งได้ผลลัพธ์เป็น :
+Node name: #text
+Node name: ARTICLE
+Node name: #text
+Node name: ARTICLE
+Node name: #text
+Node name: ARTICLE
+Node name: #text
+สุดท้ายต้องการแสดง textContent ของแต่ละ <article> โดยเริ่มต้นจากการเข้าถึง Tagname article ทั้งหมด และสร้างเป็น array เพื่อให้สามารถใช้ forEach ในการวนลูปได้
+const articles = newsSection.getElementsByTagName("article")
+Array.from(articles).forEach(article => {
+  console.log("Article text:", article.textContent)
+})
+ซึ่งได้ผลลัพธ์เป็น 
+Article text: Article A
+Article text: Article B
+Article text: Article C
+
+----------------------------------------------------------------------------------------------------------------------------------------------

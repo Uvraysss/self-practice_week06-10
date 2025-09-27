@@ -1,0 +1,44 @@
+<!-- root node/document node (logical naode) -->
+<!DOCTYPE html>
+<html lang="en">
+    <!-- root element/document element -->
+<head>
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1>Dom Example</h1>
+    </div>
+    <div id = "demo">
+        <b>Hello</b>
+        <span style="display: none">hidden</span>
+        World
+    </div>
+    <div id ="subject">
+        <p>INT140</p>
+        <!-- <p></p> -->
+    </div>
+    <div>
+        <ul id = "drink">
+            <li>cofee</li>
+            <li>Tea</li>
+            <li>Chocolate</li>
+            <li>Juice</li>
+        </ul>
+    </div>
+    <!-- 1. find all drinks under <ul> -->
+    <!-- 2. get <li>Tea</li> 
+     2.1 previous element sibling
+     2.2 next element sibling
+     2.3 parent element -->
+    <div>
+        <p>#1</p>
+        <P>#2</P>
+    </div>
+    <div id="exampleElement" style="font-size: 10pt"><!-- this is a comment node -->
+      This is some <span style="display: none">hidden</span> text content.
+    </div>
+    <script src="./main.js"></script>
+</body>
+</html>
+<!-- last element node -->

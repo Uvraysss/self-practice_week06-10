@@ -1,0 +1,20 @@
+
+สรุปเนื้อหาที่ได้เรียนรู้ในสัปดาห์ที่ 7
+
+    ได้เรียนรู้เรื่องของการใช้ JS DOM ต้องมีความรู้เรื่องการสร้าง tree สามารถมอองโครงสร้างของ html ออก รู้จัก ประเภทของ node ต่าง ๆ และสามารถ 
+    เรียกใช้งานแยก node แต่ละ node ได้ ได้ลองใช้ JS DOM เขียนหน้าเว็บ โดยเริ่มต้นที่การเชื่อมต่อ HTML กับ JavaScript โดยใช้ 
+    <script src="./main.js"></script> ในไฟล์ HTML เพื่อให้ JavaScript ทำงานกับ DOM จะทำให้ JavaScript สามารถเข้าถึงและจัดการ 
+    element ในหน้าเว็บได้ทันทีผ่าน DOM โดยใช้คำสั่งต่าง ๆ ยกตัวอย่างเช่น document.getElementById("id") เป็นคำสั่งสำหรับการเข้าถึงค่า element 
+    ตาม id หรือ document.getElementsByTagName("tag") ดึง element ตาม tag name (คืนค่า HTMLCollection) และมักมีการแปลง 
+    HTMLCollection เป็น Array ด้วย Array.from() เพื่อใช้ .forEach() การเข้าถึง Node และ Node Properties สามารถทำได้โดยการใช้คำสั้ง 
+    เช่น childNodes คืนค่า NodeList ของทุก node (รวม text nodes เช่น ช่องว่าง/line break) children คืนค่าเฉพาะ element nodes เท่านั้น 
+    firstChild / lastChild คืนค่า node แรกและสุดท้าย (รวม text node) firstElementChild / lastElementChild คืนค่า element node 
+    แรกและสุดท้าย โดยเลือกเฉพาะที่เป็น element node เท่านั้น nodeName ใช้แสดงชนิดของ node (เช่น #text, DIV, ARTICLE) nodeType สำหรับ
+    แสดงชนิดของ node (1 = Element, 3 = Text, 2 = Attribute) สุดท้าย nodeValue แสดงข้อความใน text node หรือ attribute เรื่องของ
+    การอ่านข้อความจาก Element เปรียบเทียบ 3 ชนิด innerHTML คืนค่าข้อความรวม HTML tags และ innerText คืนค่า ข้อความที่ผู้ใช้สามารถเห็นบน
+    หน้าเว็บเท่านั้น สุดท้าย textContent คืนค่า ข้อความทั้งหมด (รวม hidden text, ไม่รวม HTML tags) ต่อมาการสร้างและแก้ไข Element การสร้าง 
+    Element ใหม่สามารถใช้คำสั่ง document.createElement("tag") ได้ ถ้าต้องการสร้างข้อความหรือ text node ก็ใช้คำสั่ง 
+    document.createTextNode("text") สุดท้ายทำการ appendChild() เพื่อเพิ่ม element หรือ text เข้า DOM การสร้าง attribute สามารถสร้าง
+    ได้โดยใช้คำสั่งที่กระชับ คือ element.setAttribute("name", "value") การเข้าถึงและจัดการ Sibling, Parent previousElementSibling 
+    คือการแสดง element ก่อนหน้า ส่วน nextElementSibling คือการแสดง element ถัดไป และสุดท้าย parentElement คือการแสดง parent ของ 
+    element นั้น
