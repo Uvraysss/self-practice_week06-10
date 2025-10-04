@@ -1,0 +1,31 @@
+สรุปเนื้อหาที่ได้เรียนรู้ในสัปดาห์ที่ 8
+    ได้เรียนรู้และได้ลองเขียน Code JS เกี่ยวกับการการจัดการ DOM เพิ่มขึ้น เริ่มตั้งแต่การเลือก Element เลือกโดย ID document.getElementById("id")
+    คืนค่า element ตัวแรก ที่มี id ตรงกับที่กำหนด ซึ่งใช้ง่ายและมีความตรงไปตรงมา ต่อมาเป็นแบบเลือกโดย CSS selector document.querySelector("selector")
+    คืนค่า element ตัวแรก ที่ตรงกับ selector สามารถใช้ class, tag, pseudo-class ได้ ต่อมาประเภทที่เลือกได้หลาย element 
+    document.querySelectorAll("selector") คืนค่า NodeList ของ element ทั้งหมดที่ตรงกับ selector ซึ่ง NodeList เป็น array-like object 
+    สามารถใช้ forEach() ได้เลย โดยไม่ต้องแปลงเป็น Array แต่ถ้าถ้าจะใช้ method ของ Array เช่น map() ก็ต้องแปลงเป็น array ก่อน (Array.from())
+    ต่อมาเป็นการเลือกโดย class, tag, name 
+    document.getElementsByClassName("class") คืนค่าเป็น HTMLCollection
+    document.getElementsByTagName("tag") คืนค่าเป็น HTMLCollection
+    document.getElementsByName("name") คืนค่าเป็น NodeList 
+    หัวข้อต่อมาเป็นการเข้าถึง Children และ Siblings element.children จะคืนค่า HTMLCollection ของ child element โดย firstElementChild คือ 
+    element แรก lastElementChild คือ element สุดท้าย และ nextElementSibling ( Element ถัดไป ) หรือ previousElementSibling ( Element ก่อนหน้า )
+    ใช้สำหรับ traverse element ตามลำดับ วิธีนี้สะดวกสำหรับการ loop ทีละ element โดยไม่ต้องใช้ index
+    หัวข้อต่อมาเป็นการสร้าง, แทรก, แทนที่, และลบ Element สร้าง element ใหม่ โดยใช้คำสั่ง
+    const newLi = document.createElement("li") สร้าง <li></li>
+    newLi.textContent = "ข้อความ" ใส่ข้อความ
+    newLi.setAttribute("class", "class-name") ใส่ Attribute
+    แทรก element ก่อน element อื่น โดยใช้คำสั่ง parent.insertBefore(newLi, referenceNode) referenceNode คือ element ที่ต้องการให้แทรก ก่อนหน้า
+    แทน element ใหม่ ที่ Element เดิมได้ด้วยคำสั่ง parent.replaceChild(newLi, oldNode) หมายความว่าลบ oldNode แล้วแทนที่ด้วย newLi
+    เราสามารถลบ element ได้ด้วยคำสั่ง parent.removeChild(childNode) จำเป็นต้องมี reference ของ element ที่จะลบ
+    ต่อมาเป็นการ Loop ผ่าน Element โดยใช้ forEach กับ NodeList หรือ array Array.from(parent.children).forEach((child) => { ... })
+    ใช้ sibling relationship ในการหา Element ถัดไป และแสดงค่าทีละตัว
+    let current = parent.firstElementChild
+    while(current != null) {
+        // ทำอะไรกับ current
+        current = current.nextElementSibling
+    }
+    วิธีนี้เหมาะกับการ traverse แบบ sequential และสามารถแก้ไข DOM ระหว่าง loop ได้
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+น.ส.ธันวาวีร์ นิธิพรชัยวงศ์ รหัสนักศึกษา: 67130500131

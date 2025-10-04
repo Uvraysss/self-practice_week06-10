@@ -1,0 +1,439 @@
+Self-practice
+Week 07
+In class
+
+สัปดาห์นี้เป็นการเรียนรู้เรื่องของ JS DOM ซึ่งก่อนอื่นเราสร้างไฟล์ index.html ขึ้นมาเพื่อกำหนดโครงสร้างของหน้าเว็บ และเขียน <script src="./main.js"></script> 
+เพื่อเชื่อมการทำงานจาก main.js และสามารถจัดการหน้าเว็บผ่านไฟล์ main.js ได้ (การจัดการ DOM)
+
+/* document.getElementById(idValue) //return the first object with ID value
+document.querySelector(cssSelector) //return the first element that matches selector
+document.querySelectorAll(cssSelector) //return all elements that matches selector (NodeList - Arry like (can use for each, 
+if you want to use array functions, you need to convert array like to array)) */
+
+คำอธิบาย คอมเมนต์นี้อธิบายเรื่องของ การดึง Element โดยใช้ getElementById querySelector และ querySelectorAll ซึ่งแตกต่างกันดังนี้ 
+document.getElementById(idValue) จะคืนค่า element ตัวแรกที่มีค่า id ตรงกับ idValue
+document.querySelector(cssSelector) จะคืนค่า element ตัวแรกที่ตรงกับตัวเลือก CSS selector ที่กำหนด
+document.querySelectorAll(cssSelector) จะคืนค่า element ทั้งหมดที่ตรงกับตัวเลือก CSS selector ที่กำหนด ซึ่งผลลัพธ์ที่ได้จะเป็น NodeList 
+มีลักษณะเหมือน array สามารถใช้ forEach ได้ แต่ถ้าต้องการใช้ฟังก์ชันของ array เต็ม ๆ (เช่น map, filter ฯลฯ) ต้องแปลงจาก NodeList ให้เป็น array จริง ๆ ก่อน
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//1. query an element node that has id soup
+const soupMenu = document.getElementById('soup')
+//2. query an element nodes that have class "vegan" 
+const vegan = document.querySelectorAll('.vegan')
+//3. query any element nodes that have class "meat" 
+const meats = document.querySelectorAll('.meat')
+
+console.log(soupMenu)
+console.log(vegan) // NodeList(3) [li.vegan, li.vegan, li.vegan]
+console.log(meats) // NodeList(4) [li.meat, li.meat, li.meat, li.meat] 
+
+//4.
+const firstveganelement = document.querySelector(".vegan")
+//5.
+const firstmeatselement = document.querySelector(".meat")
+
+console.log(firstveganelement)
+console.log(firstmeatselement)
+
+คำอธิบาย 5 ตัวอย่างการเรียกใช้ getElementById querySelector และ querySelectorAll เริ่มจากตัวอย่างแรก โจทย์ต้องการให้ query element node ที่มี id soup 
+เราจึงใช้ document.getElementById('soup') เป็นการเลือก element ที่มี id="soup" ค่าที่เก็บใน soupMenu คือ element node ของ soup menu 
+(เช่น <ul id="soup">...</ul>) ถ้าไม่มี element ที่มี id = soup จะคืนค่าเป็น null ตัวอย่างที่ 2 ต้องการให้ query element node ของ class vegan ลองใช้
+คำสั่ง document.querySelectorAll(".vegan") เพื่อเลือก element ทุกตัวที่มี class vegan และคืนค่าเป็น NodeList เมื่อ console.log ออกมาได้ผลลัพธ์เป็น
+NodeList(3) [li.vegan, li.vegan, li.vegan] ซึ่งแสดงว่าใน HTML มี <li class="vegan"> อยู่ 3 ตัว ในกรณีเดียวกันกับตัวอย่างที่ 3 ซึ่งต้องการให้ query 
+element node ที่มี class meat จึงใช้คำสั่ง document.querySelectorAll(".meat") เช่นเดิม เพื่อเลือก element ทุกตัวที่มี class meat และคืนค่าเป็น NodeList 
+เมื่อ console.log ออกมาได้ผลลัพธ์เป็น NodeList(4) [li.meat, li.meat, li.meat, li.meat] ซึ่งแสดงว่าใน HTML มี <li class="meat"> อยู่ 4 ตัว
+ต่อมาตัวอย่างที่ 4 ต้องการให้ query element node ตัวแรกที่มี class vegan ออกมา จึงเลือกใช้ document.querySelector(".vegan") แทน querySelectorAll 
+เมื่อ console.log ออกมาจะได้ผลลัพธ์เป็น <li class="vegan">"Vegetable Rolls"</li> ซึ่งเป็น element ตัวแรก ของ class vegan กรณีดียวกันกับตัวอย่างที่ 5 
+ต้องการให้ query element node แรกของ class meat จึงใช้ document.querySelector(".meat") เมื่อ console.log ออกมาจะได้ผลลัพธ์เป็น 
+<li class="meat">"Chicken Wings"</li> ซึ่งเป็น element ตัวแรก ของ class meat
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+const soupSelectorElement = document.querySelectorAll('#soup')
+console.log(soupSelectorElement) //NodeList [ ul#soup ]
+console.log(soupSelectorElement.length) //1
+console.log(soupSelectorElement[0]) //<ul id="soup">
+soupSelectorElement.forEach((ele) => console.log(ele)) //<ul id="soup">
+
+let beefSoupElement
+meats.forEach((ele) => {
+    const meatElements = ele
+    //find meats element that has text value equals to "Beef Soup" <li class="meat">Beef Soup</li> and store in variable
+    if (meatElements.textContent.trim().includes("Beef Soup")) {
+    beefSoupElement = meatElements
+    console.log(beefSoupElement)
+    }
+    console.log(meatElements)
+})
+
+คำอธิบาย Code นี้เป็นตัวอย่างในการเรียก query และนำไปดำเนินการต่าง ๆ ต่อได้ เริ่มต้นที่การ query id soup และเก็บค่าไว้ในตัวแปรที่ชื่อว่า soupSelectorElement 
+โดยใช้คำสั่ง document.querySelectorAll('#soup') ( เนื่องจาก soup เป็น id จึงใช้ # แต่ถ้าเป็น class จะใช้ . ) ซึ่งปกติ id ควรไม่ซ้ำกัน แต่ querySelectorAll 
+คืนค่าเป็น NodeList เสมอ ถึงจะเจอแค่ 1 ตัว ดังนั้น soupSelectorElement จะเป็น NodeList ที่มี element <ul id="soup">...</ul> อยู่ใน index 0 และมีความยาว
+เท่ากับ 1 ต่อมามีการใช้ใช้ .forEach ซึ่งเป็นการสร้าง Array และ loop ผ่าน NodeList เพื่อให้ console.log ออกมาทีละตัว แต่เนื่องจากมีเพียง element เดียว จึงได้ผลลัพธ์
+เป็น <ul id="soup">...</ul> ต่อมาเป็นตัวอย่างของการดำเนินการโดยใช้ forEach ซึ่ง meats มาจาก document.querySelectorAll('.meat') 
+(NodeList ของ <li class="meat">) จากนั้นใช้ forEach loop ผ่านทุก element node ของ class meat โดยมี functions ดำเนินการ textContent.trim() 
+เพื่อให้อ่านข้อความใน <li> แล้วตัดช่องว่างหน้า-หลังออก จากนั้น .includes("Beef Soup") เพื่อเช็กว่ามีคำว่า "Beef Soup" อยู่ในข้อความหรือไม่
+ถ้าใช่ให้เก็บ element นั้นไว้ในตัวแปร beefSoupElement และแสดงใน console ซึ่งมีผลลัพธ์เป็น <li class="meat">Beef Soup</li> และสุดท้าย
+console.log(meatElements) จะแสดง element ทุกตัวที่ loop ผ่าน จึงได้ผลลัพธ์เป็น : 
+<li class="meat">Chicken Soup</li>
+<li class="meat">Beef Soup</li>
+<li class="meat">Pork Soup</li>
+<li class="meat">Duck Soup</li> 
+ซึ่งแสดงผลทีละตัว 
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//trverse all children nodes of <ul id="appetizer"> by using sibling relationship
+{
+    /*<ul id="appetizer">
+        <li class="vegan">Vegetable Rolls</li>
+        <li class="meat">Chicken Wings</li>
+        <li class="meat">Tuna Sandwich</li>
+    </ul>*/
+} 
+
+const appetizer = document.getElementById('appetizer')
+//visit all nodes sibling under <ul id='appetizer'>
+let current = appetizer.firstElementChild
+while (current != null) {
+  console.log(current.textContent.trim())
+  current = current.nextElementSibling
+}
+
+คำอธิบาย จากโจทย์ต้องการให้เข้าถึงทุก element node ของ <ul id="appetizer"> โดยใช้ sibling relationship ซึ่งหมายถึง ให้เริ่มจาก Element แรก 
+(firstElementChild) แล้วไปยัง Element ถัดไปเรื่อย ๆ (nextElementSibling) จนกว่าจะไม่มีตัวต่อไปแล้ว (null) ดังนั้นเริ่มจากการเข้าถึง id appetizer 
+มาเก็บไว้ในตัวแปร appetizer โดยใช้คำสั่ง const appetizer = document.getElementById('appetizer') ต่อมากำหนด let current = appetizer.firstElementChild
+โดย firstElementChild คือ element ตัวแรก ของ <ul> ในที่นี้คือ <li class="vegan">Vegetable Rolls</li> นำมาเก็บไว้ในตัวแปร current
+เขียน functions while loop เพื่อวน Element ทุกค่า ดังนี้
+while (current != null) {
+  console.log(current.textContent.trim())
+  current = current.nextElementSibling
+}
+เริ่ม loop เช็คว่า current ไม่เป็น null จากนั้น console.log(current.textContent.trim()) เพื่อเอาข้อความภายใน <li> มาแสดง โดยลบช่องว่างหัวท้ายออก
+ต่อมา current = current.nextElementSibling เพื่อทำการย้าย current ไปยัง element ถัดไป (sibling) และวนต่อจนกว่าจะไม่มี sibling แล้ว (null)
+ซึ่งเมื่อวนจนครบแล้วจะได้ผลลัพธ์สุดท้ายใน console เป็น 
+Vegetable Rolls
+Chicken Wings
+Tuna Sandwich
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//getElementsByName 
+const nameAttrElements = document.getElementsByName("fname")
+console.log(nameAttrElements)
+//NodeList implements forEach, not other array function
+nameAttrElements.forEach((ele) => console.log(ele))
+
+//getElementsByTagName - tag name (HTMLCollection)
+const liElements = document.getElementsByTagName("li")
+console.log(liElements)
+//HTMLCollection does not implement forEach, you must convert to array before you use array function
+//liElements.forEach((ele) => console.log(ele)) - Error
+const liElementsArray = Array.from(liElements)
+liElementsArray.forEach((ele) => console.log(ele))
+
+//getElementsByClassName - class name (HTML Collection)
+const veganClassElements = document.getElementsByClassName("vegan")
+console.log(veganClassElements)
+
+//Single Node - getElementById, querySelector
+//Collection nodes (Array-like (length, index) (NodeList|HTMLCollection)) - querySelectorAll, 
+//getElementsByName, getElementsByTagName, getElementsByClassName
+
+คำอธิบาย Code นี้เป็นตัวอย่างในการใช้คำสั้ง getElementsByName getElementsByTagName และ getElementsByClassName และเปรียบเทียบว่า คืนค่าเป็นอะไร 
+(NodeList หรือ HTMLCollection) โดยตัวอย่างแรกเริ่มจาก document.getElementsByName("fname") คือการเลือก ทุก element ที่มี attribute name="fname"
+และคืนค่าเป็น NodeList ซึ่ง NodeList รองรับ forEach โดยตรง (เหมือน array) จึงใช้ forEach เพื่อแสดงค่าได้เลย ซึ่งมีผลลัพธ์เป็น :
+<input type="text" name="fname" id="fname">
+<input type="text" name="fname" id="fullname">
+ตัวอย่างต่อมา document.getElementsByTagName("li") เป็นการเลือกทุก element ที่เป็น Tag <li> และคืนค่าเป็น HTMLCollection ซึ่ง HTMLCollection ไม่รองรับ 
+forEach() โดยตรง ถ้าใช้ liElements.forEach((ele) => console.log(ele)) จะทำให้ Error จึงต้องแปลงเป็น array ก่อน (Array.from(liElements)) ถึงจะ
+ใช้คำสั่ง forEach ได้ ซึ่งได้ผลลัพธ์เป็น :
+<li class="vegan">Vegetable Rolls</li>
+<li class="meat">Chicken Wings</li>
+สุดท้าย document.getElementsByClassName("vegan") คือการเลือกทุก element ที่มี class="vegan" และคืนค่าเป็น HTMLCollection กรณีเดียวกับ getElementsByTagName 
+ถ้าต้องการใช้ forEach ต้องทำการแปลงเป็น Array ก่อนถึงจะใช้ได้ เมื่อ console.log(veganClassElements) ผลลัพธ์ที่ได้จะเป็น HTMLCollection(2) [ li.vegan, li.vegan ]
+
+// Single Node ใช้ getElementById, querySelector
+// Collection nodes ลักษณะเหมือน Array มี length และ index 
+// อาจเป็น NodeList หรือ HTMLCollection – ใช้ querySelectorAll,
+// getElementsByName, getElementsByTagName, getElementsByClassName
+
+สรุปคือ ถ้าจะเลือก element ตัวเดียว ควรใช้ getElementById หรือ querySelector
+ถ้าจะเลือก element หลายตัว ควรใช้ querySelectorAll, getElementsByName, getElementsByTagName, getElementsByClassName 
+ซึ่งพวกนี้คืนค่าเป็น collection คล้าย array มี index และ length แต่ไม่ใช่ array จริง ๆ
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+const firstIdElements = document.querySelector("#soup, #appetizer")
+console.log(firstIdElements) // ได้ appetizer ก่อน เพราะเจอก่อน
+console.log(firstIdElements.length)
+
+const firstIdElement = document.querySelectorAll("#soup, #appetizer")
+console.log(firstIdElement) // ได้ appetizer ก่อน เพราะเจอก่อน
+console.log(firstIdElement.length)
+
+คำอธิบาย COde นี้เป็นตัวอย่างการใช้ querySelector และ querySelectorAll กับ selector หลายตัว (#soup, #appetizer) เริ่มต้นจากการใช้
+querySelector ซึ่งจะคืนค่า element ตัวแรก ที่ตรงกับ CSS selector ที่ระบุ selector ที่ใช้คือ #soup, #appetizer หมายถึง การเลือก element ที่มี id=soup 
+หรือ id=appetizer ซึ่ง DOM จะอ่านจากบนลงล่าง ถ้า #appetizer มาก่อนใน HTML ก็จะได้ #appetizer ซึ่งในตัวอย่างนี้ได้ผลลัพธ์เป็น <ul id="appetizer">...</ul> เพราะเจอก่อน
+ส่วน console.log(firstIdElements.length) จะ Error หรือ undefined เนื่องจาก querySelector คืนค่าเป็น element ตัวเดียว (ไม่ใช่ collection) จึงไม่มี .length
+ตัวอย่างต่อมาเป็นการใช้ querySelectorAll ซึ่งจะคืนค่าเป็น NodeList ของทุก element ที่ตรงกับ selector ที่ระบุ Selector #soup, #appetizer เลือกทั้ง #appetizer และ #soup 
+ลำดับเป็นตามที่พบใน DOM เมื่อ console.log(firstIdElement) ออกมา จะได้ผลลัพธ์เป็น NodeList [ <ul id="appetizer">...</ul>, <ul id="soup">...</ul> ]
+และ console.log(firstIdElement.length) จะได้ 2 เนื่องจากพบ 2 ค่าที่เก็บใน
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/* <ul id="soup">
+        <li class="meat">Spicy Bacon-Corn Soup</li>
+        <!-- 1. remove Vegeable Soup -->
+        <li class="vegan">Vegetable Soup</li>
+        <!-- 2. insertBefore -->
+        <!-- <li class=""vegan>Cabbage Soup</li> -->
+        <!-- 3. replace Beef Soup with Pork Soup -->
+        <li class="meat">Beef Soup</li>
+        <li class="vegan">Coconut Soup</li>
+</ul>*/
+
+//<!-- 1. remove Vegeable Soup -->
+//1. find parent element
+const ulParent = document.getElementById("soup")
+console.group(ulParent)
+//2. get its children
+const ulChildren = ulParent.children
+let vegetElement = null
+//3. find element node that satifies condition "Vegetable Soup"
+Array.from(ulChildren).forEach((liEle) => {
+if (liEle.textContent.trim() === "Vegetable Soup") vegetElement = liEle
+})
+//4. remove element 3.
+ulParent.removeChild(vegetElement)
+
+คำอธิบาย จากโจทย์ต้องการให้ลบ Vegetable Soup ซึ่งเราต้องหา <li> ที่มีข้อความ "Vegetable Soup" ก่อน แล้วลบออกจาก <ul id="soup">
+โดยเริ่มจากการใช้คำสั่ง const ulParent = document.getElementById("soup") เป็นการดึง <ul id="soup"> มาเก็บในตัวแปร ulParent (parent element)
+ต่อมา const ulChildren = ulParent.children ซึ่ง children คืนค่าเป็น HTMLCollection ของลูกทั้งหมด (live collection) มีการกำหยดให้ vegetElement = null
+เพื่อเตรียมตัวแปรเก็บ <li> ที่จะลบ จากนั้นเป็นขั้นตอนการหา "Vegetable Soup" โดยแปลง ulChildren เป็น Array แล้วใช้ forEach เพื่อวนตรวจแต่ละ <li>
+if (liEle.textContent.trim() === "Vegetable Soup") vegetElement = liEle ถ้าข้อความตรงกัน ให้ตัดช่องว่างด้วย trim() และเก็บ element นั้นไว้
+สุดท้ายใช้คำสั่ง removeChild (ulParent.removeChild(vegetElement)) เพื่อลบ element ที่เก็บไว้จาก parent ซึ่งผลลัพธ์หลังลบจะได้เท่ากับ :
+<ul id="soup">
+  <li class="meat">Spicy Bacon-Corn Soup</li>
+  <li class="meat">Beef Soup</li>
+  <li class="vegan">Coconut Soup</li>
+</ul>
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//<!-- 2. insertBefore -->
+//1. find parent element
+const ulParents = document.getElementById("soup")
+console.group(ulParents)
+//2. create new element node 
+const newLiElement = document.createElement("li")
+newLiElement.textContent = "Cabbage Soup"
+newLiElement.setAttribute("class", "vegan")
+//3. find reference node 
+let beefElement = null
+const liChildren = ulParents.children
+Array.from(liChildren).forEach((ele) => {
+    if (ele.textContent.trim() === "Beef Soup") beefElement = ele
+})
+//4. insertBefore
+ulParents.insertBefore(newLiElement,beefElement)
+
+คำอธิบาย โจทย์ข้อที่ 2 ต้องการให้แทรก Cabbage Soup ก่อน Beef Soup ซึ่งเราต้องทำการสร้าง <li class="vegan">Cabbage Soup</li> แล้วแทรกไว้ก่อน 
+<li>Beef Soup</li> เริ่มจาก const ulParents = document.getElementById("soup") เพื่อดึง <ul> อีกครั้ง ต่อมา const newLiElement = document.createElement("li")
+เป็นการสร้าง node <li> ใหม่ในหน่วยความจำ newLiElement.textContent = "Cabbage Soup" ทำการใส่ข้อความและ class ให้ element ใหม่ จากนั้น หา beefElement 
+โดยวน ulParents.children แล้วเทียบ textContent.trim() เหมือนข้อ 1 สุดท้าย ulParents.insertBefore(newLiElement, beefElement) เป็นคำสั่งเพื่อแทรก newLiElement 
+เข้าไป ก่อน node ที่เป็น beefElement ซึ่งผลลัพธ์ DOM หลังแทรกจะได้เท่ากับ :
+<ul id="soup">
+  <li class="meat">Spicy Bacon-Corn Soup</li>
+  <li class="vegan">Cabbage Soup</li>    
+  <li class="meat">Beef Soup</li>
+  <li class="vegan">Coconut Soup</li>
+</ul>
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+// 3. replace  Beef Soup with Pork Soup
+//1. find parent element
+const ulParent = document.getElementById("soup")
+console.log(ulParent)
+//2. create new element node
+const newLiElement = document.createElement("li")
+newLiElement.textContent = "Pork Soup"
+newLiElement.setAttribute("class", "meat")
+//3. find reference node
+let beefElement = null
+const liChildren = ulParent.children
+Array.from(liChildren).forEach((ele) => {
+  if (ele.textContent.trim() === "Beef Soup") beefElement = ele
+})
+//4. replace
+ulParent.replaceChild(newLiElement, beefElement) */
+
+คำอธิบาย โจทย์ต้องการให้แทนที่ Beef Soup ด้วย Pork Soup  ซึ่งเราต้องสร้าง <li class="meat">Pork Soup</li> แล้วใช้แทน <li class="meat">Beef Soup</li>
+เริ่มต้นจากการสร้าง node ใหม่แล้วหา beefElement เหมือนเดิม ulParent.replaceChild(newLiElement, beefElement) ถ้า beefElement เจอ จะถูกเอาออกและแทนที่ด้วย 
+newLiElement ถ้า beefElement เป็น null ก็จะเกิด error 
+ผลลัพธ์ DOM หลัง replace จะได้ :
+<ul id="soup">
+  <li class="meat">Spicy Bacon-Corn Soup</li>
+  <li class="vegan">Cabbage Soup</li>    
+  <li class="meat">Pork Soup</li>
+  <li class="vegan">Coconut Soup</li>
+</ul>
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//self-prctices
+
+/*
+<ul id="book-list">
+  <li class="novel">Harry Potter</li>
+  <li class="comic">Naruto</li>
+  <li class="novel">The Hobbit</li>
+  <li class="magazine">National Geographic</li>
+  <li class="novel">Lord of the Rings</li>
+</ul>
+*/
+
+//1.Remove the book titled “Naruto” from the list
+//Find the <li> element whose text is "Naruto" and remove it from <ul id="book-list">.
+const Parent = document.getElementById("book-list") 
+const child = Parent.children
+let bookElement = null
+Array.from(child).forEach((liEle) => {
+    if(liEle.textContent.trim() === "Naruto") bookElement = liEle
+})
+Parent.removeChild(bookElement)
+
+คำอธิบาย คำอธิบาย จากโจทย์ต้องการให้ลบ Naruto ออก ซึ่งเราต้องหา <li> ที่มีข้อความ "Naruto" ก่อน แล้วลบออกจาก <ul id="book-list">
+โดยเริ่มจากการใช้คำสั่ง const Parent = document.getElementById("book-list") เป็นการดึง <ul id="book-list"> มาเก็บในตัวแปร Parent (parent element)
+ต่อมา const child = Parent.children ซึ่ง children คืนค่าเป็น HTMLCollection ของลูกทั้งหมด (live collection) มีการกำหยดให้ bookElement = null
+เพื่อเตรียมตัวแปรเก็บ <li> ที่จะลบ จากนั้นเป็นขั้นตอนการหา "Naruto" โดยแปลง child เป็น Array แล้วใช้ forEach เพื่อวนตรวจแต่ละ <li>
+if (liEle.textContent.trim() === "Naruto") bookElement = liEle ถ้าข้อความตรงกัน ให้ตัดช่องว่างด้วย trim() และเก็บ element นั้นไว้
+สุดท้ายใช้คำสั่ง removeChild (Parent.removeChild(bookElement)) เพื่อลบ element ที่เก็บไว้จาก parent ซึ่งผลลัพธ์หลังลบจะได้เท่ากับ :
+<ul id="book-list">
+  <li class="novel">Harry Potter</li>
+  <li class="novel">The Hobbit</li>
+  <li class="magazine">National Geographic</li>
+  <li class="novel">Lord of the Rings</li>
+</ul>
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//2.Insert a new book “One Piece” (class="comic") before “The Hobbit”
+//Use createElement and insertBefore.
+const Parent1 = document.getElementById("book-list")
+const newLiElement1 = document.createElement("li")
+newLiElement1.textContent = "One Piece"
+newLiElement1.setAttribute("class", "comic")
+let hobbitElement = null
+const children = Parent1.children
+Array.from(children).forEach((liEle) => {
+    if(liEle.textContent.trim() === "The Hobbit") hobbitElement = liEle
+})
+Parent1.insertBefore(newLiElement1,hobbitElement)
+
+คำอธิบาย โจทย์นี้ต้องกาารให้แทนที่ <li class="novel">The Hobbit</li> ด้วย <li class="comic">One Piece</li> แทน โดยเราเริ่มต้นจากการดึง <ul id="book-list"> ซึ่งเป็น 
+parent ของ <li> ทั้งหมด โดยใช้คำสั่ง const Parent1 = document.getElementById("book-list") จากนั้นเริ่มสร้าง <li> ใหม่ ใส่ข้อความและใส่ attribute ให้ครบตามลำดับ
+const newLiElement1 = document.createElement("li")
+newLiElement1.textContent = "One Piece"
+newLiElement1.setAttribute("class", "comic")
+ต่อมา กำหนด let hobbitElement =  null เพื่อเตรียมตัวแปรเก็บ reference ของ "The Hobbit" และดึง children ของ <ul> โดยใช้คำสั่ง const children = Parent1.children
+ซึ่ง children เป็น HTMLCollection ของ <li> ทุกตัว เขียน function หา <li> ที่มีข้อความ "The Hobbit" เริ่มจากการแปลง HTMLCollection เป็น array เพื่อใช้ forEach()
+ถ้าเจอ <li> ที่มีข้อความ "The Hobbit" ให้เก็บใน hobbitElement
+Array.from(children).forEach((liEle) => {
+    if(liEle.textContent.trim() === "The Hobbit") hobbitElement = liEle
+})
+สุดท้ายแทรก <li> ใหม่ก่อน "The Hobbit" โดยใช้คำสั่ง Parent1.insertBefore(newLiElement1,hobbitElement) ผลลัพธ์ที่ได้จะเป็น :
+<ul id="book-list">
+  <li class="novel">Harry Potter</li>
+  <li class="comic">One Piece</li>
+  <li class="novel">The Hobbit</li>
+  <li class="magazine">National Geographic</li>
+  <li class="novel">Lord of the Rings</li>
+</ul>
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//3.Replace the book “Lord of the Rings” with “Game of Thrones” (class="novel")
+//Use replaceChild.
+const Parent2 = document.getElementById("book-list")
+const newLiElement2 = document.createElement("li")
+newLiElement2.textContent = "Game of Thrones"
+newLiElement2.setAttribute("class", "novel")
+let LordElement = null
+const child2 = Parent2.children
+Array.from(child2).forEach((liEle) => {
+  if (liEle.textContent.trim() === "Lord of the Rings") LordElement = liEle
+})
+Parent2.replaceChild(newLiElement2, LordElement)
+
+คำอธิบาย โจทย์ข้อนี้ต้องการให้แทนที่ <li class="novel">Lord of the Rings</li> ด้วย <li class="novel">Game of Thrones</li> ซึ่งเริ่มต้นจาการดึง parent <ul>
+โดยใช้คำสั่ง const Parent2 = document.getElementById("book-list") เป็นการเลือก <ul id="book-list"> ซึ่งเป็น parent ของ <li> ทั้งหมด
+ต่อมาทำการสร้าง <li> ใหม่ ใส่ข้อความและใส่ attribute ให้ครบ ตามลำดับ
+const newLiElement2 = document.createElement("li")
+newLiElement2.textContent = "Game of Thrones"
+newLiElement2.setAttribute("class", "novel")
+จากนั้นกำหนด let LordElement = null เพื่อเตรียมตัวแปรเก็บ reference ของ "Lord of the Rings" และดึง children ของ <ul> โดยใช้คำสั่ง const child2 = 
+Parent2.children ซึ่ง children เป็น HTMLCollection ของ <li> ทุกตัว จากนั้นหา <li> ที่มีข้อความ "Lord of the Rings"
+Array.from(child2).forEach((liEle) => {
+  if (liEle.textContent.trim() === "Lord of the Rings") LordElement = liEle
+})
+ทำการแปลง HTMLCollection ให้เป็น Array เพื่อใช้ forEach() ถ้าเจอ <li> ที่มีข้อความ "Lord of the Rings" ให้เก็บไว้ใน LordElement สุดท้ายแทนที่ <li> เดิม
+ด้วย <li> ใหม่ โดยใช้คำสั่ง Parent2.replaceChild(newLiElement2, LordElement) เป็นการลบ <li> "Lord of the Rings" ออก แล้วแทนที่ด้วย <li> "Game of Thrones"
+ซึ่งผลลัพธ์ที่ได้จะเป็น :
+<ul id="book-list">
+  <li class="novel">Harry Potter</li>
+  <li class="comic">One Piece</li>
+  <li class="novel">The Hobbit</li>
+  <li class="magazine">National Geographic</li>
+  <li class="novel">Game of Thrones</li>   <!-- แทนที่ Lord of the Rings -->
+</ul>
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//Loop through all the books in <ul id="book-list"> and log each book name
+//Use firstElementChild + nextElementSibling.
+const book = document.getElementById("book-list")
+let cur = book.firstElementChild
+while (cur != null) {
+  console.log(cur.textContent.trim())
+  cur = cur.nextElementSibling
+}
+
+คำอธิบาย โจทย์ข้อนี้ต้องการให้วนลูป Element node ใน id "book-list" โดยใช้ firstElementChild และ nextElementSibling เราเริ่มต้นจากการดึง parent <ul>
+const book = document.getElementById("book-list") เป็นการเลือก <ul id="book-list"> ซึ่งเป็น parent ของ <li> ทั้งหมด
+เริ่มจาก child element แรก let cur = book.firstElementChild ซึ่ง firstElementChild คืน <li> ตัวแรกใน <ul> ในที่นี้คือ <li class="novel">Harry Potter</li>
+เก็บไว้ในตัวแปร cur เพื่อเริ่ม loop จากนั้นวน loop จนถึง element สุดท้าย
+while (cur != null) {
+  console.log(cur.textContent.trim())
+  cur = cur.nextElementSibling
+}
+เงื่อนไข cur != null คือการ loop ต่อจนกว่า cur จะเป็น null ให้ console.log(cur.textContent.trim()) เพื่อแสดงข้อความของ <li> ต่อมา cur = cur.nextElementSibling 
+เป็นการขยับไป <li> ตัวถัดไป ซึ่งผลลัพธ์ที่ได้จะเป็นดังนี้ :
+Harry Potter
+One Piece
+The Hobbit
+National Geographic
+Game of Thrones
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//Find the first book with class="novel" and log "Found Novel: <book name>"
+//Use querySelector(".novel").
+const FirstNovel = document.querySelector(".novel")
+if (FirstNovel) {
+  console.log("Found Novel: " + FirstNovel.textContent.trim())
+}
+
+คำอธิบาย โจทย์ข้อนี้ต้องการให้ดึง Element node แรก ที่มี class = novel และ log ออกมาในรูปแบบ "Found Novel: <book name>" โดยเริ่มต้นที่การค้นหา element แรก
+ที่ตรงตาม selector โดยใช้คำสั่ง const firstNovel = document.querySelector(".novel") querySelector คืน element แรก ที่ตรงกับ CSS selector ถ้าเจอ 
+จะเก็บ element นั้นในตัวแปร firstNovel ต่อมาเป็นการตรวจสอบและ log โดยเขียน function 
+if (firstNovel) {
+  console.log("Found Novel: " + firstNovel.textContent.trim());
+}
+เพื่อเช็คว่าพบ element จริง ๆ และ ใช้ textContent.trim() ดึงชื่อหนังสือ แสดงผลผ่าน console.log ซึ่งในข้อนี้จะได้ผลลัพธ์เป็น Found Novel: Harry Potter
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
