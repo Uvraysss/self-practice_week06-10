@@ -1,0 +1,23 @@
+สรุปเนื้อหาที่ได้เรียนรู้ในสัปดาห์ที่ 9
+
+    ได้เรียนรู้การทำงานของ Event และ Event Listener ใช้คำสั่ง element.addEventListener("eventType", handlerFunction) เพื่อกำหนดสิ่งที่ต้องทำเมื่อเกิด 
+    event เช่น click, mouseover, keyup สามารถใส่ได้หลาย event กับ element เดียวกัน สามารถลบออกได้ด้วย removeEventListener(), 
+    แต่ต้องใช้ชื่อฟังก์ชันที่ประกาศไว้ (ไม่ใช่ anonymous function) ต่อมาคือความแตกต่างระหว่าง event.target และ event.currentTarget โดย 
+    event.target คือ Element ที่ถูกคลิกจริง ๆ (เช่น ปุ่ม) ส่วน event.currentTarget คือ องค์ประกอบที่มีตัวจัดการ event (เช่น div ที่ห่อปุ่มอยู่)
+    ซึ่งเกี่ยวข้องกับแนวคิด Event Bubbling คือ event จะไหลจาก element ที่ถูกคลิก ขึ้นไปยัง parent จนถึง document หรือ body
+    การป้องกันพฤติกรรมเริ่มต้นขององค์ประกอบใช้ event.preventDefault() เพื่อยกเลิกพฤติกรรมปกติของ element เช่นปุ่ม submit ใน form ที่จะ reload หน้าเว็บ
+    ลิงก์ <a> ที่จะนำไปหน้าใหม่ ช่วยให้เราควบคุม logic เองได้ เช่น ตรวจสอบข้อมูลก่อนส่ง การตรวจสอบและจัดการข้อมูลจากฟอร์ม (Form Validation)
+    เข้าถึงค่าจาก input ด้วย .value และตรวจสอบความถูกต้อง เช่น if (input.value.trim() === "") alert("Please enter a username.")
+    ใช้ if-else เพื่อเช็กแต่ละช่อง แสดงข้อความแจ้งเตือน (alert) หรืออัปเดตในหน้าเว็บได้ ต่อมาเป็นเรื่องการทำงานของ DOMContentLoaded และ window.load
+    การสร้างและจัดการองค์ประกอบด้วย JavaScript สามารถสร้าง element ใหม่ได้ เช่น
+    const h2 = document.createElement("h2")
+    h2.textContent = "Welcome!"
+    document.body.appendChild(h2)
+    ทำให้หน้าเว็บ โต้ตอบกับ User ได้ ส่วน Event อื่น ๆ ที่พบบ่อยมีดังนี้ :
+    click	ผู้ใช้คลิกองค์ประกอบ	ปุ่ม, ลิงก์
+    mouseover / mouseout	เมาส์เข้า–ออกจากองค์ประกอบ
+    keyup	ปล่อยปุ่มคีย์บอร์ด	ตรวจจับการกด Enter
+    input	มีการเปลี่ยนค่าข้อความในช่อง input	อัปเดตข้อความแบบเรียลไทม์
+    
+-----------------------------------------------------------------------------------------------------------------------------------------
+น.ส.ธันวาวีร์ นิธิพรชัยวงศ์ รหัสนักศึกษา: 67130500131

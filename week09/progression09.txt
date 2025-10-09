@@ -1,0 +1,385 @@
+Self-practice
+Week 07
+In class
+
+const whom = prompt("What is your name?", "typing your name");
+const confirmYourName = confirm(`You are ${whom}`);
+confirmYourName ? alert(`Hello, ${whom}`) : alert(`Hello, guest`);
+
+คำอธิบาย เป็น Code ตัวอย่างการรับชื่อผู้ใช้ เริ่มจาก prompt(...) เป็นการเปิดกล่องให้ผู้ใช้พิมพ์ข้อมูล คืนค่าเป็น string หรือ null ถ้ากด Cancel ต่อมา confirm(...) 
+แสดงกล่อง OK หรือ Cancel คืนค่าเป็น boolean (true ถ้ากด OK) สุดท้ายโค้ดมีการใช้ ternary operator เพื่อแสดง alert ตามการยืนยัน ซึ่งถ้า confirmYourName
+ถูกกด OK หรือเป็น true ให้ return Hello, ${whom} แต่ถ้ากด Cancel หรือเป็น false ให้ return Hello, guest
+
+const okButton = document.querySelector("div>button")
+console.log(okButton)
+
+คำอธิบาย กำหนด okButton ให้เรียกใช้งาน button ที่เป็นลูกของ div ซึ่งในที่นี้คือปุ่ม OK เป็นตัวอย่างการเรียกใช้งานถ้าไม่รู้ id 
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+//1. annonymous handler function with bubble event flow (default)
+okButton.addEventListener("click", (e) => {
+    console.log(`even.target: ${e.target}`)
+    console.log("Button was clicked!")
+})
+
+/*does not work with annonymouse function
+okButton.removeEventListener("click", () => {
+    alert("Button was clicked!")
+})*/
+
+คำอธิบาย code นี้เป็นตัวอย่างของกรณี anonymous handler (ฟังก์ชันไม่มีชื่อ) โดยมีการเพิ่ม event listener แบบ anonymous function สำหรับ click
+e.target คือ element ที่เป็นต้นเหตุของ event หรือ ตัวที่ user คลิกจริง ๆ ในที่นี้เมื่อคลิกที่ปุ่ม OK จะแสดงผลว่า even.target: [object HTMLButtonElement]
+และแสดงข้อความ Button was clicked! ใน console
+ข้อสำคัญเพิ่มเติม: ไม่สามารถ removeEventListener() กับ anonymous function นี้ได้ เพราะ removeEventListener ต้องได้ reference ของฟังก์ชันเดิม 
+(same function object)
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+//2. named function with bubble event flow (default)
+function getTarget(e) {
+   alert(`${e.target.nodeName} was fired!`)
+}
+function getMessage() {
+  const yourMessage = prompt("What is your message", "typing your message...")
+  alert(yourMessage)
+}
+
+//3. add more than one handler functions
+okButton.addEventListener("click", getTarget)
+okButton.addEventListener("click", getMessage)
+
+คำอธิบาย code นี้เป็นตัวอย่างของ function มีชื่อ ฟังก์ชันแบบมีชื่อ (named functions) จากในตัวอย่างมี function getTarget และ getMessage โดย function 
+getTarget ทำการ alert หรือแสดงข้อความให้ User เห็น เมื่อคลิกที่ปุ่ม OK จะขึ้นข้อความว่า ${e.target.nodeName} was fired! ส่วน function getMessage ทำงาน
+โดยขึ้น prompt รับการโต้ตอบจาก User ให้ User พิมพ์ message ที่ต้องการ เมื่อ User ส่ง message มาแล้ว ก็ alert หรือแสดงข้อความนั้นบนเว็บไซต์ให้ User เห็น 
+ข้อดีของการใช้ named function: สามารถ removeEventListener("click", getTarget) ได้ และสามารถผูก handler หลายอันกับ event เดียวกันได้ 
+ซึ่งทั้งสองฟังก์ชันจะถูกเรียกเมื่อคลิก
+
+/*4. remove handler function
+okButton.removeEventListener("click", getTarget)*/
+
+คำอธิบาย การเรียก removeEventListener จะต้องส่ง ตัวอ้างอิงฟังก์ชันเดิมที่ผูกไว้ เช่น getTarget ถ้าใช้ anonymous จะลบไม่ได้
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+okButton.addEventListener("click", (e) => {
+  console.log(`event.target: ${e.target}`)
+  console.log(`event.currentTarget: ${e.currentTarget}`)
+  console.log(`event.eventPhase: ${e.eventPhase}`)
+  console.log(`event.type: ${e.type}`)
+  console.log("Button was clicked!")
+})
+
+คำอธิบาย เป็นตัวอย่างการตรวจสอบข้อมูล event object อย่างละเอียด อธิบายทีละคำสั่งดังนี้ :
+e.target คือ element ที่เกิดเหตุการณ์จริง ๆ เช่น <button> เมื่อคลิกตรงปุ่ม OK จะได้ผลลัพธ์เป็น event.target: [object HTMLButtonElement]
+e.currentTarget คือ element ที่ handler ผูกอยู่ ในที่นี้คือ okButton เมื่อคลิกที่ปุ่ม OK จะได้ผลลัพธ์เป็น event.currentTarget: [object HTMLButtonElement]
+e.eventPhase คือ หมายเลขเฟสของ event (ค่าตาม DOM standard) เมื่อคลิกที่ปุ่ม OK จะได้ผลลัพธ์เป็น event.eventPhase: 2
+1 = CAPTURING_PHASE (กำลังไหลลงจาก root ไปยัง target ถ้าใช้ capture)
+2 = AT_TARGET (ถึง target)
+3 = BUBBLING_PHASE (กำลังไหลขึ้นจาก target กลับไป)
+e.type คือ string ของชนิด event เช่น "click"  
+สุดท้ายให้แสดง Button was clicked! ใน console เมื่อปุ่ม OK ถูกคลิก
+เพิ่มเติม เมื่อกดปุ่ม OK แล้ว <div> และ <body> จะโดนคลิกด้วย เพราะ event ถูกส่งต่อจากปุ่มขึ้นไปยัง parent ผ่านกลไก Event Bubbling
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+const divElement = document.querySelector("div")
+divElement.addEventListener("click", (event) => {
+  console.log(`event.target: ${event.target}`)
+  console.log(`event.currentTarget: ${event.currentTarget}`)
+  console.log(`event.eventPhase: ${event.eventPhase}`)
+  console.log(`event.type: ${event.type}`)
+  console.log("Div element was clicked!")
+})
+
+คำอธิบาย เป็นตัวอย่างการตรวจสอบข้อมูล event object อย่างละเอียด เช่นกัน ในที่นี้
+e.target เมื่อคลิกตรงปุ่ม OK จะได้ผลลัพธ์เป็น event.target: [object HTMLButtonElement] แต้ถ้าคลิกตรงช่วงกรอบสีเหลือง จะได้ผลลัพธ์เป็น event.target: [object HTMLDivElement]
+e.currentTarget ได้ผลลัพธ์เป็น event.currentTarget: [object HTMLDivElement]
+e.eventPhase เมื่อคลิกตรงปุ่ม OK จะได้ผลลัพธ์เป็น 3 แต่ถ้าคลิกตรงช่วงกรอบสีเหลือง จะได้ผลลัพธ์เป็น 2
+1 = CAPTURING_PHASE (กำลังไหลลงจาก root ไปยัง target ถ้าใช้ capture)
+2 = AT_TARGET (ถึง target)
+3 = BUBBLING_PHASE (กำลังไหลขึ้นจาก target กลับไป)
+e.type คือ string ของชนิด event เช่น "click"  
+สุดท้ายให้แสดง Div element was clicked! ใน console เมื่อถูกคลิก
+เพิ่มเติม เมื่อกดปุ่ม <div> แล้ว <body> จะโดนคลิกด้วย เพราะ event ถูกส่งต่อจากปุ่มขึ้นไปยัง parent ผ่านกลไก Event Bubbling
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+const bodyElement = document.body
+bodyElement.addEventListener("click", (event) => {
+  console.log(`event.target: ${event.target}`)
+  console.log(`event.currentTarget: ${event.currentTarget}`)
+  console.log(`event.eventPhase: ${event.eventPhase}`)
+  console.log(`event.type: ${event.type}`)
+  console.log("Body element was clicked!")
+})
+
+คำอธิบาย เป็นตัวอย่างการตรวจสอบข้อมูล event object อย่างละเอียด เช่นกัน ในที่นี้
+e.target เมื่อคลิกตรงปุ่ม OK จะได้ผลลัพธ์เป็น event.target: [object HTMLButtonElement] แต้ถ้าคลิกตรงช่วงกรอบสีเหลือง จะได้ผลลัพธ์เป็น event.target: [object HTMLDivElement]
+และถ้าคลิปตรงส่วนอื่น จะได้ผลลัพธ์เป็น event.target: [object HTMLHeadingElement]
+e.eventPhase เมื่อคลิกตรงปุ่ม OK จะได้ผลลัพธ์เป็น 3 แต่ถ้าคลิกตรงช่วงกรอบสีเหลือง จะได้ผลลัพธ์เป็น 3 เมื่อคลิกที่ส่วนอื่นๆ จะได้ผลลัพธ์เป็น 2
+1 = CAPTURING_PHASE (กำลังไหลลงจาก root ไปยัง target ถ้าใช้ capture)
+2 = AT_TARGET (ถึง target)
+3 = BUBBLING_PHASE (กำลังไหลขึ้นจาก target กลับไป)
+e.type คือ string ของชนิด event เช่น "click"  
+สุดท้ายให้แสดง Body element was clicked! ใน console เมื่อถูกคลิก
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+const aElement = document.querySelector("a")
+aElement.addEventListener("click", (e) => {
+  e.preventDefault()
+  console.log("visit link was canceled")
+})
+
+คำอธิบาย เป็นตัวอย่างการยกเลิกไปหน้าเมื่อคลิปลิงก์ e.preventDefault() ยกเลิกพฤติกรรมเริ่มต้นของ element (เช่น การไป URL ของ <a>)
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+const submitButton = document.querySelector("input[type='submit']")
+submitButton.addEventListener("click", (e) => {
+  e.preventDefault()
+  const inputElements = document.querySelectorAll("input")
+  inputElements.forEach((ele) => {
+    const attr = ele.getAttribute("type")
+    if (attr === "text") {
+      if (ele.value.trim().length === 0) console.log("invalid data")
+    }
+  })
+})
+
+คำอธิบาย เป็นตัวอย่างของการป้องกันการ submit form และตรวจ validate เริ่มจาก preventDefault() ป้องกัน form จากการ submit (หน้าไม่ reload)
+ตรวจทุก input ที่ type === "text" และแสดง invalid data ถ้าว่าง
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM is ready!')
+  const heading = document.createElement('h2')
+  heading.textContent = 'This was added when DOM was ready!'
+  document.body.appendChild(heading)
+  console.log('Heading added now.')
+})
+window.addEventListener('load', () => {
+  console.log('All resources (images, CSS, scripts) are fully loaded!')
+  console.log('Page is fully loaded')
+})
+
+คำอธิบาย ตัวอย่างของ DOMContentLoaded vs load เป็นดังนี้ DOMContentLoaded ไฟล์ HTML ถูก parse และ DOM พร้อมให้ใช้งานแล้ว (แต่ภาพ/สไตล์/iframe อาจยังโหลดไม่เสร็จ)
+ส่วน load เกิดเมื่อตัวหน้าพร้อมทั้ง resources ทั้งหมด (images, stylesheets, subframes) เสร็จสมบูรณ์แล้ว
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+const info = document.getElementById('info')
+info.addEventListener('mouseout', (event) => { console.log('mouse out') })
+info.addEventListener('mouseover', (event) => { console.log('mouse over') })
+window.addEventListener('mousemove', (event) => {
+  info.textContent = `Mouse at X: ${event.clientX}, Y: ${event.clientY}`
+})
+
+คำอธิบาย เป็นตัวอย่างของ mouseover mouseout mousemove ซึ่ง mouseover และ mouseout fired เมื่อ mouse เข้า หรือ ออกจาก element
+ส่วน mousemove fired หลายครั้งต่อวินาที เพื่ออัปเดตตำแหน่งเมาส์เรื่อย ๆ
+ประสิทธิภาพ: mousemove เป็น event ที่เกิดความถี่สูง ถ้าทำงานหนัก ควร throttle/debounce หรือใช้ requestAnimationFrame เพื่อไม่ให้กระตุก
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+const inputMessage = document.getElementById('message')
+inputMessage.addEventListener('keyup', (event) => {
+  if (event.key === 'Enter')  console.log(event.target.value)
+})
+
+const message = document.querySelector("#message")
+const display = document.querySelector("p")
+message.addEventListener('input', function() {
+    display.textContent = message.value
+})
+
+คำอธิบาย ตัวอย่างเรื่องของ keyboard และ input events โดย keyup ตรวจการปล่อยปุ่มเฉพาะที่ Enter ก็จะ log ข้อความออกมา input fired ทุกครั้งที่ค่าใน input เปลี่ยน 
+ดีสำหรับ realtime update (เช่น live preview)
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+practice 
+
+/*Exercise 1: Multi-Level Click Handling (Event Bubbling & Target)
+Task Requirements
+- Create a gray <div> containing an orange <button> inside it.
+- When the button is clicked, show this message in the console:
+- Button clicked! Target: BUTTON, CurrentTarget: BUTTON
+- When any other area of the div is clicked, show:
+- Div clicked! Target: DIV, CurrentTarget: DIV
+- When the body is clicked, show:
+- Body clicked! */
+
+const button = document.querySelector("button")
+const div = document.querySelector("div")
+const body = document.body
+
+button.addEventListener("click", (event) => {
+  console.log(`Button clicked! Target: ${event.target.nodeName}, CurrentTarget: ${event.currentTarget.nodeName}`)
+})
+
+div.addEventListener("click", (event) => {
+  console.log(`Div clicked! Target: ${event.target.nodeName}, CurrentTarget: ${event.currentTarget.nodeName}`)
+})
+
+body.addEventListener("click", () => {
+  console.log("Body clicked!")
+})
+
+คำอธิบาย จากโจทย์นี้ต้องการให้สร้าง <div> สีเทา ใส่ <button> สีส้มไว้ภายใน <div> เมื่อคลิกบนปุ่ม ให้แสดงข้อความใน console ว่า
+Button clicked! Target: BUTTON, CurrentTarget: BUTTON และเมื่อคลิกบนส่วนอื่นของ div ให้แสดงข้อความใน console ว่า
+Div clicked! Target: DIV, CurrentTarget: DIV สุดท้ายเมื่อคลิกบน body (แต่ไม่ใช่ div หรือ button) ให้แสดง Body clicked!
+เราเริ่มต้นจากการ querySelector หรือเลือกเข้าถึง element ที่ต้องการจะดำเนอนการ
+const button = document.querySelector("button")
+const div = document.querySelector("div")
+const body = document.body
+ต่อมา 
+button.addEventListener("click", (event) => {
+  console.log(`Button clicked! Target: ${event.target.nodeName}, CurrentTarget: ${event.currentTarget.nodeName}`)
+})
+เป็นการผูก click event listener กับปุ่ม event.target คือ element ที่เกิดการคลิกจริง ๆ event.currentTarget คือ element ที่ listener ถูกผูกไว้ (ปุ่ม)
+เมื่อเราคลิกปุ่ม ข้อความที่ console จะเป็น Button clicked! Target: BUTTON, CurrentTarget: BUTTON
+div.addEventListener("click", (event) => {
+  console.log(`Div clicked! Target: ${event.target.nodeName}, CurrentTarget: ${event.currentTarget.nodeName}`)
+})
+เป็นการผูก listener กับ div ถ้าคลิก ปุ่มด้านใน div Event จะ bubble ขึ้นมาถึง div โดย event.target คือ BUTTON (ต้นทางที่คลิกจริง) ส่วน event.currentTarget 
+คือ DIV (element ที่ listener อยู่) Console output จะเป็น Div clicked! Target: BUTTON, CurrentTarget: DIV
+แต่ถ้าคลิกที่พื้นที่ว่างของ div event.target จะเป็น DIV และ event.currentTarget ก็จะเป็น DIV เช่นกัน Console output ที่ได้คือ Div clicked! Target: DIV, CurrentTarget: DIV
+body.addEventListener("click", () => {
+  console.log("Body clicked!")
+})
+สุดท้ายเป็นการผูก listener กับ <body> ทุกการคลิกบน body จะ trigger event listener (รวมถึง div และ button เพราะ event bubbling)
+แต่เราสั่งให้แสดงผลแค่ Body clicked! ไม่ได้สนใจ currentTarget เลย จึงได้ Output ออกมาเป็น Body clicked!
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+/*Exercise 2: Membership Form with Validation
+Task Requirements
+- Create a <form> that contains:
+- Username input (type="text")
+- Password input (type="password")
+- A submit button
+- When clicking the submit button:
+- Prevent the default form submission (preventDefault())
+Validate:
+If the username field is empty → show alert "Please enter a username."
+If the password has fewer than 6 characters → show alert "Password is too short."
+Otherwise → show alert "Registration successful!" */
+
+const form = document.querySelector("form")
+const username = document.getElementById("username")
+const password = document.getElementById("password")
+const submitButton = document.querySelector("input[type='submit']")
+
+submitButton.addEventListener("click", (event) => {
+  event.preventDefault()
+
+  if (username.value.trim() === "") {
+    alert("Please enter a username.")
+  } else if (password.value.length < 6) {
+    alert("Password is too short.")
+  } else {
+    alert("Registration successful!")
+  }
+})
+
+คำอธิบาย โจทย์นี้ต้องการให้สร้าง <form> ที่มี Username input (type="text") Password input (type="password") Submit button (type="submit")
+เมื่อคลิก submit ต้องป้องกันการ submit จริงด้วย event.preventDefault() มีการตรวจสอบเงื่อนไข ถ้า username ว่าง ให้แสดง alert: "Please enter a username."
+ถ้า password น้อยกว่า 6 ตัวอักษร ให้แสดง alert: "Password is too short." สุดท้ายถ้าผ่านทั้งสองเงื่อนไข ให้แสดง alert: "Registration successful!"
+เราเริ่มจากการ querySelector หรือเลือกเข้าถึง element ที่ต้องการดำเนินการเช่นเดิม 
+const form = document.querySelector("form")
+const username = document.getElementById("username")
+const password = document.getElementById("password")
+const submitButton = document.querySelector("input[type='submit']")
+จากนั้นผูก click event กับปุ่ม submit
+
+submitButton.addEventListener("click", (event) => {
+  event.preventDefault()
+
+event.preventDefault() เป็นการป้องกัน ฟอร์มส่งข้อมูลไป server ทำให้เราสามารถตรวจสอบข้อมูลก่อนได้
+
+  if (username.value.trim() === "") {
+    alert("Please enter a username.")
+
+ตรวจสอบว่าช่อง username ว่างหรือไม่ .trim() เพื่อตัดช่องว่างหน้าหลัง ถ้าว่าง ให้แสดง alert แจ้งผู้ใช้
+
+  } else if (password.value.length < 6) {
+    alert("Password is too short.")
+
+ตรวจสอบความยาวของ password ถ้าน้อยกว่า 6 ตัว ให้แจ้ง alert
+
+  } else {
+    alert("Registration successful!")
+  }
+})
+
+สุดท้ายถ้าผ่านทั้งสองเงื่อนไข ให้แจ้ง Registration successful!
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+/*Exercise 3: DOM-Ready User Interaction
+Task Requirements
+- When the DOM content is fully loaded (DOMContentLoaded), create an <h2> element with the text:
+Welcome! The page is ready.
+- Then append it to the <body>.
+When all resources (images, CSS, scripts) are fully loaded (load event on window), log this message:
+All resources are fully loaded!
+- Add an input field with the ID "message".
+Whenever the user types into it (input event), display the typed text in a <p> element below it in real time. */
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM is ready!");
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Welcome! The page is ready.";
+  document.body.prepend(heading);
+})
+
+window.addEventListener("load", () => {
+  console.log("All resources are fully loaded!");
+})
+
+const input = document.getElementById("message");
+const display = document.querySelector("p");
+
+input.addEventListener("input", () => {
+  display.textContent = input.value;
+})
+
+คำอธิบาย จากโจทย์คือ เมื่อ DOM พร้อมใช้งาน (DOMContentLoaded) ให้สร้าง <h2> ที่มีข้อความ "Welcome! The page is ready."
+ใส่ <h2> ลงใน <body> เมื่อทรัพยากรทั้งหมดโหลดเรียบร้อย (window.load) แสดงข้อความใน console "All resources are fully loaded!"
+สร้าง input field ที่มี id="message" เมื่อผู้ใช้พิมพ์ (input event) แสดงข้อความที่พิมพ์แบบ real-time ใน <p> ด้านล่าง
+เราเริ่มจากการ querySelector หรือเลือกเข้าถึง element ที่ต้องการดำเนินการเช่นเดิม 
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM is ready!");
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Welcome! The page is ready.";
+  document.body.prepend(heading);
+})
+
+ฟังชั่น DOMContentLoaded ถูกเรียกเมื่อ DOM พร้อมใช้งาน (HTML ถูก parse เสร็จแล้ว) สร้าง <h2> ด้วย document.createElement
+กำหนดข้อความด้วย .textContent ใส่ <h2> เข้าไปที่ เริ่มต้น <body> ด้วย .prepend() Console จะแสดง "DOM is ready!"
+
+window.addEventListener("load", () => {
+  console.log("All resources are fully loaded!");
+})
+
+window.load จะถูกเรียกเมื่อ ทรัพยากรทั้งหมดโหลดเสร็จ (รูปภาพ, CSS, scripts) Console จะแสดง "All resources are fully loaded!"
+
+const input = document.getElementById("message");
+const display = document.querySelector("p");
+
+input.addEventListener("input", () => {
+  display.textContent = input.value;
+})
+
+เลือก input field ด้วย id="message" เลือก p element ที่จะใช้แสดงข้อความ เมื่อผู้ใช้พิมพ์ (input event) นำค่า input.value มาใส่ display.textContent
+ทำให้ข้อความปรากฏแบบ real-time
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
