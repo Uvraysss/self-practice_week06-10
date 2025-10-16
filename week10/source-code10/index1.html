@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theme Settings</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <h2>Theme Website</h2>
+
+  <form id="settingsForm">
+    <label>
+      Background Color:
+      <input type="color" id="bgColor" value="#ffffff">
+    </label>
+    <br><br>
+
+    <label>
+      Font Color:
+      <input type="color" id="fontColor" value="#000000">
+    </label>
+    <br><br>
+
+    <label>
+      Font Size:
+      <select id="fontSize">
+        <option value="small">Small</option>
+        <option value="medium" selected>Medium</option>
+        <option value="large">Large</option>
+      </select>
+    </label>
+    <br><br>
+
+    <button type="button" id="saveBtn">Save</button>
+    <button type="button" id="resetBtn">Reset</button>
+  </form>
+  <script src="script.js"></script>
+</body>
+</html>

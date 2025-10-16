@@ -1,5 +1,5 @@
 Self-practice
-Week 07
+Week 09
 In class
 
 const whom = prompt("What is your name?", "typing your name");

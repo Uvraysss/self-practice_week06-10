@@ -1,5 +1,5 @@
 Self-practice
-Week 07
+Week 08
 In class
 
 สัปดาห์นี้เป็นการเรียนรู้เรื่องของ JS DOM ซึ่งก่อนอื่นเราสร้างไฟล์ index.html ขึ้นมาเพื่อกำหนดโครงสร้างของหน้าเว็บ และเขียน <script src="./main.js"></script> 

@@ -1,0 +1,352 @@
+Self-practice
+Week 10
+In class
+
+cookieUtil.js 
+
+class CookieUtil {
+  static get(name) {
+    let cookieName = `${encodeURIComponent(name)}=`,
+      cookieStart = document.cookie.indexOf(cookieName),
+      cookieValue = null
+    if (cookieStart > -1) {
+      let cookieEnd = document.cookie.indexOf(';', cookieStart)
+      if (cookieEnd === -1) {
+        cookieEnd = document.cookie.length
+      }
+      cookieValue = decodeURIComponent(
+        document.cookie.substring(cookieStart + cookieName.length, cookieEnd)
+      )
+    }
+    return cookieValue
+  }
+
+  static set(name, value, expires) {
+    let cookieText = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`
+    if (expires instanceof Date) {
+      console.log(expires)
+      cookieText += `;expires=${expires}`
+    }
+    document.cookie = cookieText
+    console.log(document.cookie)
+  }
+  //to remove existing cookies, setting the cookie again—with the same path, domain, and secure options—and set its expiration date to some time in the past.
+  static unset(name) {
+    //set to a blank string and the expiration date set to January 1, 1970 (the value of a Date object initialized to 0 milliseconds).
+    CookieUtil.set(name, '', new Date(0)) //or max-age=0
+  }
+} //ending class
+export { CookieUtil }
+
+คำอธิบาย จุดประสงค์หลักของ cookieUtil.js คือการสร้าง utility class ไว้จัดการ cookie ได้สะดวก อ่านง่าย เขียนง่าย ลบค่า และลดข้อผิดพลาด โดยไม่ต้องยุ่งกับ document.cookie โดยตรง
+ทุกเมธอดในคลาสนี้เป็น static method หมายความว่า เราไม่ต้องสร้างว object ก่อนใช้งาน สามารถเรียกใช้ได้ทันที อธิบายส่วนของ Code ได้ดังนี้
+class CookieUtil { เป็นการประกาศคลาสชื่อ CookieUtil เป็นคลาสที่เก็บฟังก์ชันสำหรับจัดการคุกกี้ทั้งหมดไว้ในที่เดียว
+
+static get(name) {
+  let cookieName = `${encodeURIComponent(name)}=`,
+      cookieStart = document.cookie.indexOf(cookieName),
+      cookieValue = null
+มี method get() สำหรับอ่านค่าของคุกกี้ที่ต้องการ encodeURIComponent(name) เป็นการแปลงชื่อคุกกี้ให้เป็นรูปแบบที่ปลอดภัย (กันอักขระพิเศษเช่นช่องว่าง)
+ตัวแปร cookieName คือข้อความที่ต้องค้นหาใน document.cookie เช่น "username=" document.cookie คือสตริงคุกกี้ทั้งหมดในเบราว์เซอร์ cookieStart ใช้หาตำแหน่งที่คุกกี้นี้เริ่มต้นอยู่ในสตริงนั้น 
+ถ้าไม่เจอจะได้ค่า -1 สุดท้ายตั้ง cookieValue เป็น null เพื่อเตรียมไว้เก็บค่าที่หาเจอ
+
+  if (cookieStart > -1) { เป็นส่วนสำหรับอ่านค่า cookie
+    let cookieEnd = document.cookie.indexOf(';', cookieStart)
+    if (cookieEnd === -1) {
+      cookieEnd = document.cookie.length
+    }
+เป็น function ที่ตรวจว่ามีคุกกี้ชื่อนี้จริงไหม (cookieStart > -1) ถ้ามี ให้หาตำแหน่ง ; ถัดไป เพื่อดูว่าคุกกี้นี้จบตรงไหน แต่ถ้าไม่มี ; แปลว่ามันเป็นคุกกี้ตัวสุดท้ายในสตริง ให้ใช้ความยาวทั้งหมดแทน
+
+    cookieValue = decodeURIComponent(
+      document.cookie.substring(cookieStart + cookieName.length, cookieEnd)
+    )
+  }
+  return cookieValue
+}
+ตัดเฉพาะข้อความที่อยู่หลัง "name=" จนถึงตำแหน่ง ; และแปลงค่ากลับด้วย decodeURIComponent() เพื่อให้กลับมาเป็นข้อความปกติ (เช่นช่องว่างหรืออักขระพิเศษ) สุดท้ายส่งค่าคุกกี้กลับไปให้ client
+สรุปสุดท้ายจะได้ผลลัพธ์เช่น : CookieUtil.get('username') จะได้ค่าของคุกกี้ชื่อ username กลับมา
+
+static set(name, value, expires) { เป็นส่วนสำหรับตั้งค่า cookie
+  let cookieText = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`
+มี method set() ใช้สร้างหรืออัปเดตคุกกี้ แปลงชื่อและค่าด้วย encodeURIComponent() เพื่อความปลอดภัย และรวมเป็นข้อความ "name=value"
+
+  if (expires instanceof Date) {
+    console.log(expires)
+    cookieText += `;expires=${expires}`
+  }
+
+เป็น function สำหรับตรวจว่าพารามิเตอร์ expires ที่ส่งมาเป็นวันที่จริงไหม ถ้าใช่ ก็ให้เพิ่มข้อมูลวันหมดอายุของคุกกี้ลงไปในสตริง เช่น ถ้า expires เป็นวันที่ 20 ตุลาคม 2025
+จะได้ ;expires=Mon Oct 20 2025 00:00:00 GMT+0000
+
+  document.cookie = cookieText
+  console.log(document.cookie)
+}
+เมื่อประกอบข้อความครบแล้ว ก็เอาไปใส่ใน document.cookie เบราว์เซอร์จะเก็บค่านี้เป็นคุกกี้ทันที แล้วพิมพ์คุกกี้ทั้งหมดใน console เพื่อตรวจสอบ
+ : CookieUtil.set('username', 'John', new Date(2025, 9, 20)) สร้างคุกกี้ชื่อ username มีค่า John และหมดอายุวันที่ 20 ตุลาคม 2025
+
+static unset(name) { เป็นส่วนสำหรับลบ cookie
+  CookieUtil.set(name, '', new Date(0))
+}
+มี method unset() ใช้ลบคุกกี้ออกจากเบราว์เซอร์ โดยเทคนิคการลบ cookie ในเบราว์เซอร์จริง ๆ คือ ตั้ง cookie ชื่อเดิมอีกครั้ง แต่ให้วันหมดอายุอยู่ในอดีต
+new Date(0) หมายถึงวันที่ 1 มกราคม 1970 เบราว์เซอร์จะเห็นว่าคุกกี้หมดอายุแล้ว และลบทิ้งให้เอง
+สรุปสุดท้ายจะได้ผลลัพธ์เช่น : CookieUtil.unset('username') ลบคุกกี้ชื่อ username
+
+} //ending class
+export { CookieUtil }
+
+เป็นการปิดคลาส CookieUtil แล้ว export ออกไป เพื่อให้ไฟล์อื่นสามารถ import มาใช้งานได้ เช่น
+
+import { CookieUtil } from './cookieUtil.js'
+
+CookieUtil.set('theme', 'dark')
+console.log(CookieUtil.get('theme'))
+CookieUtil.unset('theme')
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+main.js
+
+import { CookieUtil } from "./cookieUtil.js"
+
+// console.log(document.cookie)
+// document.cookie = `theme=dark;expires=${new Date(2025, 9, 15)}`
+// console.log(document.cookie)
+
+// document.cookie = "font-size=14px;max-age=60"
+// console.log(document.cookie)
+
+// document.cookie = "theme=light" //เมื่อกำหนดตัวแปรซ้ำกันจะมีการเขียนทับ
+// document.cookie = "color=warm"
+
+// console.log(document.cookie) // ใน console แสดง cookie ทุกค่า
+
+console.log(CookieUtil.get("theme"))
+console.log(CookieUtil.get("color"))
+
+CookieUtil.set("cartId", "abc123", new Date(2025, 9, 20))
+console.log(CookieUtil.get("cartId"))
+console.log(document.cookie)
+
+CookieUtil.unset("color")
+console.log(document.cookie)
+
+// localStorage
+let counter = localStorage.getItem("count")
+if (counter === null) {
+  localStorage.setItem("count", "1")
+  counter = 1
+} else {
+  counter = Number(counter) + 1
+  localStorage.setItem("count", counter.toString())
+}
+alert(counter)
+
+// localStorage
+/*let counter = sessionStorage.getItem("count")
+if (counter === null) {
+    sessionStorage.setItem("count", "1")
+  counter = 1
+} else {
+  counter = Number(counter) + 1
+  sessionStorage.setItem("count", counter.toString())
+}
+alert(counter)*/
+
+sessionStorage.removeItem("count")
+sessionStorage.clear()
+
+คำอธิบาย เป็นการทดสอบและสาธิตการทำงานของ cookie localStorage และ sessionStorage โดยอาศัยคลาส CookieUtil ที่นำเข้ามาจากไฟล์ cookieUtil.js ช่วยจัดการ cookie ให้สะดวกขึ้น
+เริ่มต้นจากการนำเข้าโมดูล import { CookieUtil } from "./cookieUtil.js" ซึ่งเป็นการ import คลาส CookieUtil จากไฟล์อื่นเข้ามาใช้ในสคริปต์นี้ ทำให้เราสามารถเรียกใช้ method 
+เช่น CookieUtil.get(), CookieUtil.set(), และ CookieUtil.unset() ได้
+
+console.log(CookieUtil.get("theme"))
+console.log(CookieUtil.get("color"))
+เป็นตัวอย่างการทดสอบการอ่านค่า cookie โดยใช้ CookieUtil.get() เพื่ออ่านค่าของคุกกี้ชื่อ "theme" และ "color" ถ้ามีคุกกี้อยู่จริง จะแสดงค่าของมันใน console ถ้าไม่มี จะแสดงค่า null
+
+CookieUtil.set("cartId", "abc123", new Date(2025, 9, 20))
+console.log(CookieUtil.get("cartId"))
+console.log(document.cookie)
+เป็นตัวยอย่างของการสร้าง cookie ใหม่ สร้างคุกกี้ชื่อ "cartId" มีค่าเป็น "abc123" และตั้งวันหมดอายุเป็นวันที่ 20 ตุลาคม 2025 จากนั้นอ่านค่ากลับมาดูด้วย get() และแสดง 
+document.cookie เพื่อเช็กว่าคุกกี้ถูกบันทึกหรือยัง
+
+CookieUtil.unset("color")
+console.log(document.cookie)
+เป็นตัวอย่างการลบ cookie เรียกใช้ method unset() เพื่อลบคุกกี้ชื่อ "color" เมื่อสั่งลบแล้วให้แสดง document.cookie อีกครั้ง จะเห็นว่าคุกกี้ "color" หายไป
+
+let counter = localStorage.getItem("count")
+if (counter === null) {
+  localStorage.setItem("count", "1")
+  counter = 1
+} else {
+  counter = Number(counter) + 1
+  localStorage.setItem("count", counter.toString())
+}
+alert(counter)
+
+code นี้เป็นตัวอย่างของการใช้ localStorage อธิบายดังนี้ localStorage.getItem("count") เป็นการดึงค่าที่เคยเก็บไว้ใน localStorage ภายใต้ชื่อ "count"
+ถ้ายังไม่เคยมี ให้ตั้งค่าเริ่มต้นเป็น "1" แต่ถ้ามีอยู่แล้ว ให้แปลงเป็นตัวเลข (Number(counter)) แล้วบวกเพิ่ม 1 จากนั้นบันทึกค่ากลับลง localStorage อีกครั้ง
+กำหนดให้แสดงค่าปัจจุบันผ่าน alert(counter) ทุกครั้งที่เปิดหน้าเว็บนี้ใหม่ ตัวเลข count จะเพิ่มขึ้นเรื่อย ๆ เพราะ localStorage ยังคงเก็บข้อมูลไว้แม้ปิดหน้าเว็บไปแล้ว
+
+let counter = sessionStorage.getItem("count")
+if (counter === null) {
+    sessionStorage.setItem("count", "1")
+  counter = 1
+} else {
+  counter = Number(counter) + 1
+  sessionStorage.setItem("count", counter.toString())
+}
+alert(counter)
+
+ตัวอย่างการใช้ sessionStorage จะคล้ายกับ localStorage ทุกอย่าง แต่ต่างกันที่ sessionStorage จะเก็บข้อมูลแค่ในช่วงที่หน้าเว็บยังเปิดอยู่ ถ้าปิดแท็บหรือรีเฟรชใหม่ ข้อมูลจะหาย
+
+sessionStorage.removeItem("count")
+sessionStorage.clear()
+ตัวอย่างการลบข้อมูลใน sessionStorage .removeItem("count") เป็นการลบเฉพาะ key "count" ส่วน .clear() เป็นการลบข้อมูลทุกอย่างใน sessionStorage ออกหมด
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+practice 
+
+script.html  
+จากโจทย์ของอาจารย์ ต้องการให้สร้างหน้าเว็บหน้าหนึ่งที่มีฟอร์มให้ผู้ใช้ปรับตั้งค่าการแสดงผลของหน้าเพจและบันทึกค่าดังกล่าวลงใน localStorage เมื่อกด Save และ คืนค่าเริ่มต้นเมื่อกด Reset
+ฟอร์มต้องมีตัวเลือกอย่างน้อย 3 อย่าง:
+Background Color — input แบบ color 
+Font Color — input แบบ color
+Font Size — dropdown มีค่า small, medium, large 
+
+มีปุ่ม Save:
+เมื่อกด ให้บันทึกค่าที่ผู้ใช้เลือกลง localStorage
+แล้วนำค่ามาใช้กับหน้าเว็บทันที (เปลี่ยนสีพื้นหลัง, สีตัวอักษร, ขนาดตัวอักษร)
+เมื่อเปิดหน้าเว็บ (หรือรีเฟรช) ให้โหลดค่าจาก localStorage หากมี แล้วปรับหน้าจอให้ตรงกับค่าที่บันทึกไว้
+
+มีปุ่ม Reset:
+ล้างค่าที่เกี่ยวข้องทั้งหมดใน localStorage
+คืนการแสดงผลของหน้าเว็บเป็นค่าเริ่มต้น (default)
+อัปเดตฟอร์มให้แสดงค่าเริ่มต้นด้วย
+
+document.addEventListener("DOMContentLoaded", function () {
+  const bgColorInput = document.getElementById("bgColor")
+  const fontColorInput = document.getElementById("fontColor")
+  const fontSizeSelect = document.getElementById("fontSize")
+  const saveBtn = document.getElementById("saveBtn")
+  const resetBtn = document.getElementById("resetBtn")
+
+  const FONT_SIZES = {
+    small: "14px",
+    medium: "18px",
+    large: "22px"
+  }
+
+  loadSettings()
+
+  saveBtn.addEventListener("click", function () {
+    const settings = {
+      background: bgColorInput.value,
+      fontColor: fontColorInput.value,
+      fontSize: fontSizeSelect.value
+    }
+    localStorage.setItem("pageSettings", JSON.stringify(settings))
+    applySettings(settings)
+    alert("บันทึกการตั้งค่าเรียบร้อยแล้ว!")
+  })
+
+  resetBtn.addEventListener("click", function () {
+    localStorage.removeItem("pageSettings")
+    bgColorInput.value = "#ffffff"
+    fontColorInput.value = "#000000"
+    fontSizeSelect.value = "medium"
+    applySettings({
+      background: "#ffffff",
+      fontColor: "#000000",
+      fontSize: "medium"
+    })
+    alert("คืนค่าตั้งต้นเรียบร้อยแล้ว!")
+  })
+
+  function applySettings(settings) {
+    document.body.style.backgroundColor = settings.background
+    document.body.style.color = settings.fontColor
+    document.body.style.fontSize = FONT_SIZES[settings.fontSize]
+  }
+
+  function loadSettings() {
+    const saved = localStorage.getItem("pageSettings")
+    if (saved) {
+      const settings = JSON.parse(saved)
+      bgColorInput.value = settings.background
+      fontColorInput.value = settings.fontColor
+      fontSizeSelect.value = settings.fontSize
+      applySettings(settings)
+    }
+  }
+})
+
+สามารถอธิบาย code แต่ละส่วนได้ดังนี้
+document.addEventListener("DOMContentLoaded", function () { ... }) เป็นการใช้ Event Listener ตรวจว่าหน้าเว็บโหลด DOM เสร็จแล้ว
+หมายความว่า HTML ทุกส่วน (input, button ฯลฯ) ถูกโหลดเข้ามาในหน่วยความจำแล้ว จากนั้นค่อยเริ่มเข้าถึง element ต่าง ๆ ด้วย getElementById ได้อย่างปลอดภัย
+
+const bgColorInput = document.getElementById("bgColor");
+const fontColorInput = document.getElementById("fontColor");
+const fontSizeSelect = document.getElementById("fontSize");
+const saveBtn = document.getElementById("saveBtn");
+const resetBtn = document.getElementById("resetBtn");
+
+มีการกำหนดขนาดตัวอักษรเป็น object
+const FONT_SIZES = {
+  small: "14px",
+  medium: "18px",
+  large: "22px"
+};
+กำหนดขนาดตัวอักษรแต่ละระดับเป็นค่ามาตรฐาน และจะนำไปใช้ตอนเปลี่ยนขนาด font ใน applySettings() ต่อมาเรียกฟังก์ชัน loadSettings() ทันทีเมื่อหน้าเว็บโหลด 
+loadSettings(); ตรวจสอบว่าใน localStorage มีการตั้งค่าที่เคยบันทึกไว้ไหม ถ้ามีให้โหลดค่ามาใช้ทันที
+
+saveBtn.addEventListener("click", function () {
+  const settings = {
+    background: bgColorInput.value,
+    fontColor: fontColorInput.value,
+    fontSize: fontSizeSelect.value
+  };
+  localStorage.setItem("pageSettings", JSON.stringify(settings))
+  applySettings(settings)
+  alert("บันทึกการตั้งค่าเรียบร้อยแล้ว!")
+})
+เป็น code ในส่วน Event Listener ของปุ่ม Save โดยเมื่อกดปุ่ม Save จะทำการดึงค่าจาก input ทั้ง 3 ตัว สร้าง object ชื่อ settings เก็บค่าทั้งหมดไว้
+แปลง object ให้เป็น string ด้วย JSON.stringify() แล้วบันทึกใน localStorage โดยใช้ key ชื่อ "pageSettings" จากนั้นเรียก applySettings(settings) 
+เพื่อเปลี่ยนสีและขนาดตัวอักษรในหน้าเว็บทันที แสดงข้อความแจ้งเตือนว่า “บันทึกการตั้งค่าเรียบร้อยแล้ว!”
+
+resetBtn.addEventListener("click", function () {
+  localStorage.removeItem("pageSettings")
+  bgColorInput.value = "#ffffff"
+  fontColorInput.value = "#000000"
+  fontSizeSelect.value = "medium"
+  applySettings({
+    background: "#ffffff",
+    fontColor: "#000000",
+    fontSize: "medium"
+  })
+  alert("คืนค่าตั้งต้นเรียบร้อยแล้ว!")
+})
+เป็น code ในส่วน Event Listener ของปุ่ม Reset จะทำการลบข้อมูลใน localStorage (ใช้ removeItem()) ตั้งค่าฟอร์มกลับไปเป็นค่าเริ่มต้น
+เรียก applySettings() เพื่อปรับหน้าเว็บกลับไปเป็นแบบเริ่มต้น และแจ้งเตือนผู้ใช้ว่าคืนค่าตั้งต้นแล้ว
+
+function applySettings(settings) {
+  document.body.style.backgroundColor = settings.background
+  document.body.style.color = settings.fontColor
+  document.body.style.fontSize = FONT_SIZES[settings.fontSize]
+}
+ทำหน้าที่เปลี่ยนค่าการแสดงผลของหน้าเว็บให้ตรงกับการตั้งค่าที่ส่งเข้ามา เปลี่ยนสีพื้นหลัง (backgroundColor) เปลี่ยนสีตัวอักษร (color) และเปลี่ยนขนาดตัวอักษร (fontSize) โดยดูจาก object FONT_SIZES
+
+function loadSettings() {
+  const saved = localStorage.getItem("pageSettings");
+  if (saved) {
+    const settings = JSON.parse(saved);
+    bgColorInput.value = settings.background;
+    fontColorInput.value = settings.fontColor;
+    fontSizeSelect.value = settings.fontSize;
+    applySettings(settings);
+  }
+}
+ทำหน้าที่โหลดค่าที่บันทึกไว้ใน localStorage (ถ้ามี) ดึงค่าจาก localStorage ด้วย key "pageSettings" ถ้ามีข้อมูล ให้แปลงจาก string กลับเป็น object (JSON.parse())
+และนำค่าที่ได้มาใส่กลับเข้าไปใน input สุดท้ายเรียก applySettings() เพื่อให้ค่าที่บันทึกไว้แสดงผลในหน้าเว็บทันที
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
